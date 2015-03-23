@@ -9,6 +9,6 @@ urlpatterns = patterns(
     '',
     # Examples:
     url(r'^$', IndexView.as_view(), name='home'),
-    
+
     url(r'^admin/', include(admin.site.urls)),
 )

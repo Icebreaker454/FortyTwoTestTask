@@ -13,7 +13,7 @@ from personal_info.models import Person
 class Ticket1Test(TestCase):
     """ The ticket1 test case """
     fixtures = ['test.json']
-    
+
     def test_database(self):
         queryset = Person.objects.all()
         if len(queryset) > 1:
@@ -21,7 +21,7 @@ class Ticket1Test(TestCase):
 
     def test_auth(self):
         user = User.objects.first()
-        self.client.login()
+        self.client.login(username=user.username, password=user.password)
 
     def test_page_info(self):
         """ Test whether the page displays data """
@@ -36,5 +36,3 @@ class Ticket1Test(TestCase):
         self.assertIn('jsmith@jabber.me', response.content)
         self.assertIn('jsmith_007', response.content)
         self.assertIn('Phone: +39912034', response.content)
-
-
