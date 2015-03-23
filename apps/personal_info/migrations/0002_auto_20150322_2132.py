@@ -33,7 +33,7 @@ def load_fixture(apps, schema_editor):
 def unload_fixture(apps, schema_editor):
     """ Deleting all entries for given models """
 
-    MyModel = apps.get_model('ticket1', 'Person')
+    MyModel = apps.get_model('personal_info', 'Person')
     MyModel.objects.all().delete()
     User.objects.all().delete()
 
@@ -41,7 +41,7 @@ def unload_fixture(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ticket1', '0001_initial'),
+        ('personal_info', '0001_initial'),
     ]
 
     operations = [

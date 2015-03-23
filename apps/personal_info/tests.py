@@ -7,7 +7,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.models import User
 
-from ticket1.models import Person
+from personal_info.models import Person
 
 
 class Ticket1Test(TestCase):

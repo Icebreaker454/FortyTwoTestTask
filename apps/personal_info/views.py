@@ -5,7 +5,7 @@
 
 from django.views.generic import TemplateView
 
-from ticket1.models import Person
+from personal_info.models import Person
 
 
 class IndexView(TemplateView):
