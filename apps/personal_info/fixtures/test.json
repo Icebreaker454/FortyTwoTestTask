@@ -1,6 +1,6 @@
  [
    {
-     "model": "ticket1.person",
+     "model": "personal_info.person",
      "pk": 1,
      "fields":
      {
