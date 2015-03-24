@@ -19,6 +19,9 @@ urlpatterns += patterns(
     url(
         r'^static/(?P<path>.*)$',
         'django.views.static.serve',
-        {'document_root': common.STATIC_ROOT}
+        {
+            'document_root': common.MEDIA_ROOT,
+            'show_indexes': True
+        }
     ),
 )
