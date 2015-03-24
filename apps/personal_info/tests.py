@@ -10,16 +10,18 @@ from django.contrib.auth.models import User
 from personal_info.models import Person
 
 
-class Ticket1Test(TestCase):
+class MainPageTest(TestCase):
     """ The ticket1 test case """
     fixtures = ['test.json']
 
     def test_database(self):
+        """ Test whether there is only one object in the database """
         queryset = Person.objects.all()
         if len(queryset) > 1:
             self.fail("There shouldn't be another database entry")
 
     def test_auth(self):
+        """ Test the authentication system"""
         user = User.objects.first()
         self.client.login(username=user.username, password=user.password)
 
