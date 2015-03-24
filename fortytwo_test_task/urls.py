@@ -4,6 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from apps.personal_info.views import IndexView
+from fortytwo_test_task.settings import common
 
 urlpatterns = patterns(
     '',
@@ -11,4 +12,9 @@ urlpatterns = patterns(
     url(r'^$', IndexView.as_view(), name='home'),
 
     url(r'^admin/', include(admin.site.urls)),
+)
+
+urlpatterns += patterns(
+    '',
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': common.STATIC_ROOT}),
 )
