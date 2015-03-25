@@ -28,7 +28,7 @@ class MainPageTest(TestCase):
     def test_person_model_names(self):
         """ Test Person model verbose names """
         self.assertEqual(Person._meta.verbose_name, u'Person')
-        self.assertEqual(Person._meta.verbose_name, u'Persons')
+        self.assertEqual(Person._meta.verbose_name_plural, u'Persons')
 
     def test_database(self):
         """ Test whether there is only one object in the database """

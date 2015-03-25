@@ -14,3 +14,4 @@ build
 media
 *.dat
 .env
+*.log
