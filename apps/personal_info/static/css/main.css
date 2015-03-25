@@ -6,6 +6,11 @@ body {
     background-color: #bbbbbb;
 }
 
+.error {
+    background-color: #660e0e;
+    border-bottom: 2px solid black;
+}
+
 #header {
     border-bottom: 2px solid black;
     margin-bottom: 5px;

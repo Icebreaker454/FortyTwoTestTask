@@ -2,25 +2,33 @@
 
 {% load staticfiles %}
 
-{% block info %}
-  <h2 id="personal-info">Personal information</h2>
-  <h4>First name:</h4>
-  <p>{{ person.first_name }}</p>
-  <h4>Last name:</h4>
-  <p>{{ person.last_name }}</p>
-  <h4>Birth date:</h4>
-  <p>{{ person.birth_date }}</p>
-  <h4>Bio:</h4>
-  <p>{{ person.bio }}</p>
+{% block error %}
+{% if not person %}
+
+    <div class="error">
+      <h2>No person information, you've probably deleted the database record</h2>
+    </div>
+{% endif %}
 {% endblock %}
-{% block contacts %}
-  <h2 id="contacts">Contacts</h2>
-  <h4>Email:</h4>
-  <p>{{ person.contacts_email }}</p>
-  <h4>Jabber JID:</h4>
-  <p>{{ person.contacts_jabber_id }}</p>
-  <h4>Skype:</h4>
-  <p>{{ person.contacts_skype_id }}</p>
-  <h4>Other:</h4>
-  <p>{{ person.contacts_other }}</p>
-{% endblock %}
+  {% block info %}
+    <h2 id="personal-info">Personal information</h2>
+    <h4>First name:</h4>
+    <p>{{ person.first_name }}</p>
+    <h4>Last name:</h4>
+    <p>{{ person.last_name }}</p>
+    <h4>Birth date:</h4>
+    <p>{{ person.birth_date }}</p>
+    <h4>Bio:</h4>
+    <p>{{ person.bio }}</p>
+  {% endblock %}
+  {% block contacts %}
+    <h2 id="contacts">Contacts</h2>
+    <h4>Email:</h4>
+    <p>{{ person.contacts_email }}</p>
+    <h4>Jabber JID:</h4>
+    <p>{{ person.contacts_jabber_id }}</p>
+    <h4>Skype:</h4>
+    <p>{{ person.contacts_skype_id }}</p>
+    <h4>Other:</h4>
+    <p>{{ person.contacts_other }}</p>
+  {% endblock %}

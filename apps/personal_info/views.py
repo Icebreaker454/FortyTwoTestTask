@@ -37,6 +37,7 @@ class IndexView(TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         # Selecting the first object, for the data is only for myself
         person = Person.objects.first()
-        LOGGER_DEBUG.debug(person.__unicode__())
+        if person:
+            LOGGER_DEBUG.debug(person.__unicode__())
         context['person'] = person
         return context
