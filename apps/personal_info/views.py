@@ -9,8 +9,7 @@ from django.views.generic import TemplateView
 
 from apps.personal_info.models import Person
 
-LOGGER_INFO = logging.getLogger('personal_info.info')
-LOGGER_DEBUG = logging.getLogger('personal_info.debug')
+LOGGER = logging.getLogger('personal_info')
 
 
 class IndexView(TemplateView):
@@ -25,7 +24,7 @@ class IndexView(TemplateView):
         :param kwargs: keyword arguments
         :return: returns the base class dispatch()
         """
-        LOGGER_INFO.info(request.path)
+        LOGGER.info(request.path)
         return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -38,6 +37,6 @@ class IndexView(TemplateView):
         # Selecting the first object, for the data is only for myself
         person = Person.objects.first()
         if person:
-            LOGGER_DEBUG.debug(person.__unicode__())
+            LOGGER.debug(person.__unicode__())
         context['person'] = person
         return context

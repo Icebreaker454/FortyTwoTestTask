@@ -42,3 +42,8 @@ class Person(models.Model):
         :return: model's string representation
         """
         return "%s %s" % (self.first_name, self.last_name)
+
+
+class WebRequest(models.Model):
+    """ The Request model for the Requests Page """
+    pass

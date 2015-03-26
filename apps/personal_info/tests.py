@@ -5,9 +5,13 @@
 
 from django.test import TestCase
 from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.http import HttpRequest
 
 from apps.personal_info.models import Person
+from apps.personal_info.middleware import RequestLogMiddleware
+from apps.personal_info.models import WebRequest
 
 
 class MainPageTest(TestCase):
@@ -66,3 +70,41 @@ class MainPageTest(TestCase):
         self.assertIn('jsmith@jabber.me', response.content)
         self.assertIn('jsmith_007', response.content)
         self.assertIn('Phone: +39912034', response.content)
+
+
+class RequestsPageTest(TestCase):
+    """ The requests page test case """
+    def setUp(self):
+        self.middleware = RequestLogMiddleware
+
+    def test_middleware_saves_requests(self):
+        """
+        Test whether the middleware stores requests in db
+        """
+        request = HttpRequest()
+
+        request.path = '/some_path'
+        request.method = 'GET'
+        request.META['REMOTE_ADDR'] = 'localhost'
+
+        self.middleware.process_request(request)
+        self.assertEqual(WebRequest.objects.count(), 1)
+
+    def test_time_ordering(self):
+        """ Test the requests ordering by time """
+        requests = WebRequest.objects.order_by('-time')
+        response = self.client.get(reverse('home'))
+
+        for i, request in enumerate(requests):
+            self.assertEqual(response.context['requests'][i].pk, request.pk)
+
+    def test_page_requests_count(self):
+        """" Test whether the page has only 10 requests shown on it """
+        for _ in range(10):
+            self.client.get(reverse('requests'))
+
+        response = self.client.get(reverse('requests'))
+        self.assertEqual(len(response.context['requests']), 10)
+        self.assertContains(response.content, reverse('requests'), 10)
+
+
