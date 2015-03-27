@@ -109,7 +109,6 @@ class RequestsPageTest(TestCase):
             "%s%s" % (request.remote_address, request.path)
         )
 
-
     def test_page_requests_count(self):
         """" Test whether the page has only 10 requests shown on it """
         for _ in range(10):
@@ -117,10 +116,10 @@ class RequestsPageTest(TestCase):
 
         response = self.client.get(reverse('requests'))
         self.assertTrue(len(response.context['requests']) <= 10)
-        self.assertIn(reverse('requests'), response.content, 10) 
+        self.assertIn(reverse('requests'), response.content, 10)
 
     def test_filter_requests(self):
-        """ 
+        """
         Test whether the /favicon.ico requests are being ignored
         """
         request = HttpRequest()
@@ -129,4 +128,3 @@ class RequestsPageTest(TestCase):
         self.middleware.process_request(request)
         response = self.client.get('/requests/')
         self.assertNotIn(request.path, response.content)
-

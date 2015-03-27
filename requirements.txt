@@ -3,3 +3,4 @@ Django==1.6.7
 flake8
 South
 tornado
+simplejson

@@ -4,7 +4,6 @@
 """
 
 import logging
-import simplejson
 
 from django.views.generic import TemplateView
 from django.views.generic import ListView

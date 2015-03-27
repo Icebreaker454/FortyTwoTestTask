@@ -13,14 +13,16 @@ class RequestLogMiddleware(object):
         """
         The middleware overridden method, which is called before
         calling view function
+        :param cls: the class instance
         :param request: the request that comes in
         :return: None
         """
-        WebRequest(
-            path=request.path,
-            remote_address=request.META.get('REMOTE_ADDR', ''),
-            get=json.dumps(request.GET),
-            post=json.dumps(request.POST),
-            method=request.method
-        ).save()
-        LOGGER.info("Request object stored by middleware")
+        if not request.path.endswith('favicon.ico'):
+            WebRequest(
+                path=request.path,
+                remote_address=request.META.get('REMOTE_ADDR', ''),
+                get=json.dumps(request.GET),
+                post=json.dumps(request.POST),
+                method=request.method
+            ).save()
+            LOGGER.info("Request object stored by middleware")

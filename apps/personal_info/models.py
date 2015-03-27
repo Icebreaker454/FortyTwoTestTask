@@ -59,5 +59,4 @@ class WebRequest(models.Model):
         Method to convert Webrequest model to a string
         :return: WebRequest string representation
         """
-        return "%s%s" % (self.remote_address, self.path) 
-
+        return "%s%s" % (self.remote_address, self.path)
