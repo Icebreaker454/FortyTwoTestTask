@@ -4,6 +4,7 @@
 """
 
 from django.test import TestCase
+from django.test import RequestFactory
 from django.core.urlresolvers import reverse_lazy
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -135,7 +136,11 @@ class RequestsPageTest(TestCase):
         Test whether the ajax requests from the requests page are being
         ignored
         """
-        request = HttpRequest()
-        request.path = '/requests/'
-        request.method = 'GET'
-        request.is_ajax = True
+        factory = RequestFactory()
+        request_count = WebRequest.objects.count()
+        request = factory.get(
+            '/requests/',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.middleware.process_request(request)
+        self.assertEqual(request_count, WebRequest.objects.count())
