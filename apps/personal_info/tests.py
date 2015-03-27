@@ -93,10 +93,22 @@ class RequestsPageTest(TestCase):
     def test_time_ordering(self):
         """ Test the requests ordering by time """
         requests = WebRequest.objects.order_by('-time')
-        response = self.client.get(reverse('home'))
+        response = self.client.get(reverse('requests'))
 
         for i, request in enumerate(requests):
-            self.assertEqual(response.context['requests'][i].pk, request.pk)
+            self.assertEqual((response.context['requests'])[i].pk, request.pk)
+
+    def test_request_model_unicode(self):
+        """ Test the request model string representation"""
+        request = WebRequest.objects.create(
+            remote_address='http://localhost',
+            path='/testpath'
+        )
+        self.assertEqual(
+            request.__unicode__(),
+            "%s%s" % (request.remote_address, request.path)
+        )
+
 
     def test_page_requests_count(self):
         """" Test whether the page has only 10 requests shown on it """
@@ -105,6 +117,16 @@ class RequestsPageTest(TestCase):
 
         response = self.client.get(reverse('requests'))
         self.assertTrue(len(response.context['requests']) <= 10)
-        self.assertIn(reverse('requests'), response.content, 10)
+        self.assertIn(reverse('requests'), response.content, 10) 
 
+    def test_filter_requests(self):
+        """ 
+        Test whether the /favicon.ico requests are being ignored
+        """
+        request = HttpRequest()
+        request.path = '/favicon.ico'
+        request.method = 'GET'
+        self.middleware.process_request(request)
+        response = self.client.get('/requests/')
+        self.assertNotIn(request.path, response.content)
 
