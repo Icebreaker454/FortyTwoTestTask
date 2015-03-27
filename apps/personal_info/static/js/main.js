@@ -24,7 +24,7 @@ function AsyncRequestUpdate() {
             },
             'html'
         )
-    }, 10000)
+    }, 1000)
 }
 
 
