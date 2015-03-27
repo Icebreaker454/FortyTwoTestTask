@@ -31,3 +31,6 @@
     <h4>Other:</h4>
     <p>{{ person.contacts_other }}</p>
   {% endblock %}
+  {% block link %}
+    <h4><a href="{% url 'requests' %}">Requests</a></h4>
+  {% endblock %}

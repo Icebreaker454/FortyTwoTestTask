@@ -2,3 +2,4 @@ Django==1.6.7
 42cc-pystyle==0.0.12
 flake8
 South
+simplejson

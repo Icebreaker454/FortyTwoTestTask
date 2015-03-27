@@ -6,11 +6,12 @@
 import logging
 
 from django.views.generic import TemplateView
+from django.views.generic import ListView
 
 from apps.personal_info.models import Person
+from apps.personal_info.models import WebRequest
 
-LOGGER_INFO = logging.getLogger('personal_info.info')
-LOGGER_DEBUG = logging.getLogger('personal_info.debug')
+LOGGER = logging.getLogger('personal_info')
 
 
 class IndexView(TemplateView):
@@ -25,7 +26,7 @@ class IndexView(TemplateView):
         :param kwargs: keyword arguments
         :return: returns the base class dispatch()
         """
-        LOGGER_INFO.info(request.path)
+        LOGGER.info(request.path)
         return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -38,6 +39,20 @@ class IndexView(TemplateView):
         # Selecting the first object, for the data is only for myself
         person = Person.objects.first()
         if person:
-            LOGGER_DEBUG.debug(person.__unicode__())
+            LOGGER.debug(person.__unicode__())
         context['person'] = person
         return context
+
+
+class RequestsView(ListView):
+    """
+        The requests page view for my application
+    """
+    template_name = 'personal_info/requests.html'
+    context_object_name = 'requests'
+
+    def get_queryset(self):
+        queryset = WebRequest.objects.order_by('-time')[:10]
+        for obj in queryset:
+            LOGGER.debug(obj.__unicode__())
+        return queryset

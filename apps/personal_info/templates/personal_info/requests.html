@@ -1,0 +1,29 @@
+{% extends 'personal_info/_l_request_page.html' %}
+{% load staticfiles %}
+{% block content %}
+  <table class="table table-striped" id="request-table">
+    <thead>
+      <tr>
+        <th width="15%">Time:</th>
+        <th width="35%">Path:</th>
+        <th width="10%">Method</th>
+        <th width="20%">POST</th>
+        <th width="20%">GET</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in requests %}
+        <tr>
+          <td width="15%">{{ object.time|date:'Y-m-d H:i:s'}}</td>
+          <td width="35%">{{ object.remote_address }}{{ object.path }}</td>
+          <td width="10%">{{ object.method }}</td>
+          <td width="20%">{{ object.POST }}</td>
+          <td width="20%">{{ object.GET }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+{% block js %}
+  <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'personal_info/__base.html'%}
+{% load staticfiles %}
+{% block layout %}
+  <div class="row" id="content">
+    <div class="col-xs-12" id="table-column">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+{% block js %}
+{% endblock %}

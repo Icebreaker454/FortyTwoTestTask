@@ -4,12 +4,14 @@ from django.contrib import admin
 admin.autodiscover()
 
 from apps.personal_info.views import IndexView
+from apps.personal_info.views import RequestsView
 from fortytwo_test_task.settings import common
+
 
 urlpatterns = patterns(
     '',
-    # Examples:
     url(r'^$', IndexView.as_view(), name='home'),
+    url(r'^requests/', RequestsView.as_view(), name='requests'),
 
     url(r'^admin/', include(admin.site.urls)),
 )
