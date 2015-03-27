@@ -1,8 +1,6 @@
-var unread = 0;
-
 function AsyncRequestUpdate() {
     var initial_title = $('title').text();
-
+    var unread = 0;
     setInterval(function() {
         var table = $('#request-table');
         var last_time = $('td:first').text();
