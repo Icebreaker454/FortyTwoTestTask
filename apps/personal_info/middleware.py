@@ -1,3 +1,7 @@
+"""
+The module that contains middleware that stores all http requests
+into database
+"""
 import logging
 import json
 
@@ -19,7 +23,7 @@ class RequestLogMiddleware(object):
         """
         if not request.path.endswith('favicon.ico'):
             # I definitely don't want to spam the db with AJAX update
-            # requests, though i can store some of them as normal
+            # requests
             if request.path == '/requests/' and request.is_ajax():
                 LOGGER.info("Request object ignored by middleware")
                 return None
