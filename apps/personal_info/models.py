@@ -46,4 +46,18 @@ class Person(models.Model):
 
 class WebRequest(models.Model):
     """ The Request model for the Requests Page """
-    pass
+
+    time = models.DateTimeField(auto_now_add=True)
+    path = models.TextField()
+    get = models.TextField()
+    post = models.TextField()
+    remote_address = models.IPAddressField()
+    method = models.CharField(max_length=7)
+
+    def __unicode__(self):
+        """
+        Method to convert Webrequest model to a string
+        :return: WebRequest string representation
+        """
+        return self.path
+

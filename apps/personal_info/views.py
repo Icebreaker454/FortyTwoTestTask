@@ -4,10 +4,13 @@
 """
 
 import logging
+import simplejson
 
 from django.views.generic import TemplateView
+from django.views.generic import ListView
 
 from apps.personal_info.models import Person
+from apps.personal_info.models import WebRequest
 
 LOGGER = logging.getLogger('personal_info')
 
@@ -40,3 +43,17 @@ class IndexView(TemplateView):
             LOGGER.debug(person.__unicode__())
         context['person'] = person
         return context
+
+
+class RequestsView(ListView):
+    """
+        The requests page view for my application
+    """
+    template_name = 'personal_info/requests.html'
+    context_object_name = 'requests'
+
+    def get_queryset(self):
+        queryset = WebRequest.objects.order_by('-time')[:10]
+        for obj in queryset:
+            LOGGER.debug(obj.__unicode__())
+        return queryset
