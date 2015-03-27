@@ -120,7 +120,8 @@ class RequestsPageTest(TestCase):
 
     def test_filter_requests(self):
         """
-        Test whether the /favicon.ico requests are being ignored
+        Test whether the /favicon.ico requests and ajax requests to
+        the requests page are being ignored
         """
         request = HttpRequest()
         request.path = '/favicon.ico'
@@ -128,3 +129,13 @@ class RequestsPageTest(TestCase):
         self.middleware.process_request(request)
         response = self.client.get('/requests/')
         self.assertNotIn(request.path, response.content)
+
+    def test_filter_self_ajax(self):
+        """
+        Test whether the ajax requests from the requests page are being
+        ignored
+        """
+        request = HttpRequest()
+        request.path = '/requests/'
+        request.method = 'GET'
+        request.is_ajax = True

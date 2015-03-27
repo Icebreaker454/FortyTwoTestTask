@@ -3,7 +3,7 @@ import json
 
 from apps.personal_info.models import WebRequest
 
-LOGGER = logging.getLogger('personal_info')
+LOGGER = logging.getLogger('personal_info.info')
 
 
 class RequestLogMiddleware(object):
@@ -18,11 +18,17 @@ class RequestLogMiddleware(object):
         :return: None
         """
         if not request.path.endswith('favicon.ico'):
-            WebRequest(
-                path=request.path,
-                remote_address=request.META.get('REMOTE_ADDR', ''),
-                get=json.dumps(request.GET),
-                post=json.dumps(request.POST),
-                method=request.method
-            ).save()
-            LOGGER.info("Request object stored by middleware")
+            # I definitely don't want to spam the db with AJAX update
+            # requests, though i can store some of them as normal
+            if request.path == '/requests/' and request.is_ajax():
+                LOGGER.info("Request object ignored by middleware")
+                return None
+            else:
+                WebRequest(
+                    path=request.path,
+                    remote_address=request.META.get('REMOTE_ADDR', ''),
+                    get=json.dumps(request.GET),
+                    post=json.dumps(request.POST),
+                    method=request.method
+                ).save()
+                LOGGER.info("Request object stored by middleware")
