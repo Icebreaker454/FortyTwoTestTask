@@ -7,12 +7,10 @@
   </div>
 {% endif %}
 {% endblock status_message %}
+{% block error %}
+{% endblock %}
 
 {% block layout %}
-    <div class="row" id="error">
-        {% block error %}
-        {% endblock %}
-    </div>
     <div class="row" id="content">
       <div class="col-xs-6" id="info-column">
         {% block info %}

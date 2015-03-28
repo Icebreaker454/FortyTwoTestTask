@@ -5,7 +5,6 @@
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
 
-from crispy_forms.bootstrap import FormActions
 from crispy_forms.bootstrap import Div
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML
@@ -55,8 +54,7 @@ class PersonUpdateForm(ModelForm):
             ),
             Div(
                 Div(
-                    Submit('done_button', 'Save', css_class='btn btn-primary'),
-                    Submit('cancel_button', 'Cancel', css_class='btn btn-primary'),
+                    Submit('done_button', 'Save', css_class='btn btn-link'),
                     css_class='col-xs-12'
                 ),
                 css_class='row'

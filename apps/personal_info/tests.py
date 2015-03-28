@@ -157,14 +157,17 @@ class EditPageTest(TestCase):
         """ Ensure that the edit page displays correct person """
         response = self.client.get(reverse('update'))
         self.assertIn('42 Coffee Cups Test Assignment', response.content)
-        self.assertIn('John', response.content)
-        self.assertIn('Smith', response.content)
-        self.assertIn('July 12, 1990', response.content)
-        self.assertIn('FBI agent', response.content)
-        self.assertIn('jsmith@gmail.com', response.content)
-        self.assertIn('jsmith@jabber.me', response.content)
-        self.assertIn('jsmith_007', response.content)
-        self.assertIn('Phone: +39912034', response.content)
+        self.assertIn('Paul', response.content)
+        self.assertIn('Pukach', response.content)
+        self.assertIn('1996-06-25', response.content)
+        self.assertIn(
+            'Student of AM faculty in Lviv Polytechnic National University',
+            response.content
+        )
+        self.assertIn('pavlopukach@gmail.com', response.content)
+        self.assertIn('icebreaker454@jabber.me', response.content)
+        self.assertIn('shoker2506', response.content)
+        self.assertIn('Phone: +380963699598', response.content)
 
     def test_form_valid(self):
         """ Test the form with posting valid data """
@@ -172,34 +175,43 @@ class EditPageTest(TestCase):
             reverse('update'),
             {
                 # All required fields are posted
-                "first_name": "Alan",
-                "last_name": "Walker",
-                "birth_date": "1990-07-12",
-                "contacts_email": "awalker@gmail.com",
+                'first_name': 'Alan',
+                'last_name': 'Walker',
+                'birth_date': '1990-07-12',
+                'contacts_email': 'awalker@gmail.com',
             }
         )
-        person = Person.objects.first()
+        self.assertEqual(Person.objects.count(), 1)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(person.first_name, 'Alan')
-        self.assertEqual(person.last_name, 'Walker')
-        self.assertEqual(person.birth_date, '1990-07-22')
-        self.assertEqual(person.contacts_email, "awalker@gmail.com",)
-        self.assertEqual(person.objects.count(), 1)
+        self.assertIn('Alan', response.content)
+        self.assertIn('Walker', response.content)
+        self.assertIn('1990-07-12', response.content)
+        self.assertIn("awalker@gmail.com", response.content)
 
     def test_form_invalid(self):
         """ Test the form with posting invalid data """
         response = self.client.post(
             reverse('update'),
             {
-                # All required fields are posted
+                # Not all required fields are posted
                 "first_name": "Alan",
                 "last_name": "Walker"
             }
         )
         # After form error we must see the same page with errors
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'birth_date', [u'This field is required.'])
-        self.assertFormError(response, 'form', 'contacts_email', [u'This field is required.'])
+        self.assertFormError(
+            response,
+            'form',
+            'birth_date',
+            'This field is required.'
+        )
+        self.assertFormError(
+            response,
+            'form',
+            'contacts_email',
+            'This field is required.'
+        )
 
         response = self.client.post(
             reverse('update'),
@@ -213,5 +225,15 @@ class EditPageTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'birth_date', u"Enter a valid date.")
-        self.assertFormError(response, 'form', 'contacts_email', u"Enter a valid email address.")
+        self.assertFormError(
+            response,
+            'form',
+            'birth_date',
+            'Enter a valid date.'
+        )
+        self.assertFormError(
+            response,
+            'form',
+            'contacts_email',
+            'Enter a valid email address.'
+        )

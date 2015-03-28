@@ -4,8 +4,10 @@
 """
 
 import logging
-from django.core.urlresolvers import reverse
+import simplejson
 
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
@@ -32,7 +34,8 @@ class IndexView(TemplateView):
         """
         status = request.GET.get('status_message')
         if status:
-            self.status_message = status
+            setattr(self, 'status_message', status)
+            LOGGER_INFO.info("Found status message: %s" % status)
         LOGGER_INFO.info(request.path)
         return super(IndexView, self).dispatch(request, *args, **kwargs)
 
@@ -84,3 +87,11 @@ class PersonUpdateView(UpdateView):
         :return: returns the object to edit
         """
         return Person.objects.first()
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            return HttpResponse(
+                simplejson.dumps(request.POST),
+                content_type='application/json'
+            )
+        return super(PersonUpdateView, self).post(request, *args, **kwargs)

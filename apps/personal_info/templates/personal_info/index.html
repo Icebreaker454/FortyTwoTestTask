@@ -4,8 +4,8 @@
 
 {% block error %}
 {% if not person %}
-    <div class="error">
-      <h2>No person information, you've probably deleted the database record</h2>
+    <div class="alert alert-danger">
+      No person information, you've probably deleted the database record
     </div>
 {% endif %}
 {% endblock %}
