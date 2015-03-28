@@ -9,8 +9,9 @@
     </div>
 {% endif %}
 {% endblock %}
+
   {% block info %}
-    <h2 id="personal-info">Personal information</h2>
+    <h2 id="personal-info"><a href="{% url 'update' %}">Personal information</a></h2>
     <h4>First name:</h4>
     <p>{{ person.first_name }}</p>
     <h4>Last name:</h4>
@@ -21,7 +22,7 @@
     <p>{{ person.bio }}</p>
   {% endblock %}
   {% block contacts %}
-    <h2 id="contacts">Contacts</h2>
+    <h2 id="contacts"><a href="{% url 'update' %}">Contacts</a></h2>
     <h4>Email:</h4>
     <p>{{ person.contacts_email }}</p>
     <h4>Jabber JID:</h4>

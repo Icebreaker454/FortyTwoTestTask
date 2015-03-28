@@ -4,10 +4,12 @@
 """
 
 import logging
+from django.core.urlresolvers import reverse
 
 from django.views.generic import TemplateView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
+from apps.personal_info.forms import PersonUpdateForm
 
 from apps.personal_info.models import Person
 from apps.personal_info.models import WebRequest
@@ -28,6 +30,9 @@ class IndexView(TemplateView):
         :param kwargs: keyword arguments
         :return: returns the base class dispatch()
         """
+        status = request.GET.get('status_message')
+        if status:
+            self.status_message = status
         LOGGER_INFO.info(request.path)
         return super(IndexView, self).dispatch(request, *args, **kwargs)
 
@@ -43,6 +48,8 @@ class IndexView(TemplateView):
         if person:
             LOGGER_DEBUG.debug(person.__unicode__())
         context['person'] = person
+        if getattr(self, 'status_message', None):
+            context['status_message'] = self.status_message
         return context
 
 
@@ -66,3 +73,14 @@ class PersonUpdateView(UpdateView):
     """
     model = Person
     template_name = 'personal_info/edit.html'
+    form_class = PersonUpdateForm
+
+    def get_success_url(self):
+        return "%s?status_message=Modified successfully" % reverse('home')
+
+    def get_object(self, queryset=None):
+        """
+        This method returns the first Person object in the db
+        :return: returns the object to edit
+        """
+        return Person.objects.first()

@@ -9,7 +9,6 @@ from apps.personal_info.views import PersonUpdateView
 from fortytwo_test_task.settings import common
 
 
-
 urlpatterns = patterns(
     '',
     url(r'^$', IndexView.as_view(), name='home'),

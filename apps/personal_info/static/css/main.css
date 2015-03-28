@@ -35,3 +35,7 @@
 .table-striped {
     background-color: inherit !important;
 }
+.alert-success {
+    border-radius: 15px;
+    margin-bottom: 5px;
+}

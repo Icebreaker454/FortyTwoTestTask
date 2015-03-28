@@ -46,6 +46,8 @@ INSTALLED_APPS = (
     'apps.personal_info',
 )
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

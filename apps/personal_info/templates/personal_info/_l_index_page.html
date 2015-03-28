@@ -1,4 +1,13 @@
 {% extends 'personal_info/__base.html' %}
+{% block status_message %}
+<!-- Status message -->
+{% if status_message %}
+  <div class="alert alert-success">
+    {{ status_message }}
+  </div>
+{% endif %}
+{% endblock status_message %}
+
 {% block layout %}
     <div class="row" id="error">
         {% block error %}

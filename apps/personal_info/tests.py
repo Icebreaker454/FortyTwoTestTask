@@ -198,19 +198,20 @@ class EditPageTest(TestCase):
         )
         # After form error we must see the same page with errors
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'birth_date', "This field is required")
-        self.assertFormError(response, 'form', 'contacts_email', "This field is required")
+        self.assertFormError(response, 'form', 'birth_date', [u'This field is required.'])
+        self.assertFormError(response, 'form', 'contacts_email', [u'This field is required.'])
 
         response = self.client.post(
+            reverse('update'),
             {
                 # All required fields are posted
                 "first_name": "Alan",
                 "last_name": "Walker",
                 "birth_date": "some invalid date",
-                "contacts_email": "some invalid email",
+                "contacts_email": "some invalid email"
             }
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', 'birth_date', "Enter a valid date")
-        self.assertFormError(response, 'form', 'contacts_email', "Enter a valid email")
+        self.assertFormError(response, 'form', 'birth_date', u"Enter a valid date.")
+        self.assertFormError(response, 'form', 'contacts_email', u"Enter a valid email address.")
