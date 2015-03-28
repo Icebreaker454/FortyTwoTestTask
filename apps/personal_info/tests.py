@@ -128,7 +128,7 @@ class RequestsPageTest(TestCase):
         request.path = '/favicon.ico'
         request.method = 'GET'
         self.middleware.process_request(request)
-        response = self.client.get('/requests/')
+        response = self.client.get(reverse('requests'))
         self.assertNotIn(request.path, response.content)
 
     def test_filter_self_ajax(self):
@@ -144,3 +144,60 @@ class RequestsPageTest(TestCase):
         )
         self.middleware.process_request(request)
         self.assertEqual(request_count, WebRequest.objects.count())
+
+
+class EditPageTest(TestCase):
+    """ The edit page test case """
+    def test_page_existence(self):
+        """ Test whether the edit page exists """
+        response = self.client.get(reverse('update'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_form_valid(self):
+        """ Test the form with posting valid data """
+        response = self.client.post(
+            reverse('update'),
+            {
+                # All required fields are posted
+                "first_name": "Alan",
+                "last_name": "Walker",
+                "birth_date": "1990-07-12",
+                "contacts_email": "awalker@gmail.com",
+            }
+        )
+        person = Person.objects.first()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(person.first_name, 'Alan')
+        self.assertEqual(person.last_name, 'Walker')
+        self.assertEqual(person.birth_date, '1990-07-22')
+        self.assertEqual(person.contacts_email, "awalker@gmail.com",)
+        self.assertEqual(person.objects.count(), 1)
+
+    def test_form_invalid(self):
+        """ Test the form with posting invalid data """
+        response = self.client.post(
+            reverse('update'),
+            {
+                # All required fields are posted
+                "first_name": "Alan",
+                "last_name": "Walker"
+            }
+        )
+        # After form error we must see the same page with errors
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'form', 'birth_date', "This field is required")
+        self.assertFormError(response, 'form', 'contacts_email', "This field is required")
+
+        response = self.client.post(
+            {
+                # All required fields are posted
+                "first_name": "Alan",
+                "last_name": "Walker",
+                "birth_date": "some invalid date",
+                "contacts_email": "some invalid email",
+            }
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'form', 'birth_date', "Enter a valid date")
+        self.assertFormError(response, 'form', 'contacts_email', "Enter a valid email")
