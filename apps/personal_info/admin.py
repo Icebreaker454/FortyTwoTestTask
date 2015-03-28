@@ -4,6 +4,7 @@
 from django.contrib import admin
 
 from apps.personal_info.models import Person
+from apps.personal_info.models import WebRequest
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -32,3 +33,4 @@ class PersonAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(Person, PersonAdmin)
+admin.site.register(WebRequest)
