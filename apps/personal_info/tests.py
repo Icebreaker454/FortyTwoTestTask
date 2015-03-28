@@ -153,6 +153,19 @@ class EditPageTest(TestCase):
         response = self.client.get(reverse('update'))
         self.assertEqual(response.status_code, 200)
 
+    def test_page_correct_person(self):
+        """ Ensure that the edit page displays correct person """
+        response = self.client.get(reverse('update'))
+        self.assertIn('42 Coffee Cups Test Assignment', response.content)
+        self.assertIn('John', response.content)
+        self.assertIn('Smith', response.content)
+        self.assertIn('July 12, 1990', response.content)
+        self.assertIn('FBI agent', response.content)
+        self.assertIn('jsmith@gmail.com', response.content)
+        self.assertIn('jsmith@jabber.me', response.content)
+        self.assertIn('jsmith_007', response.content)
+        self.assertIn('Phone: +39912034', response.content)
+
     def test_form_valid(self):
         """ Test the form with posting valid data """
         response = self.client.post(

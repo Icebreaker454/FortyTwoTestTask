@@ -7,6 +7,7 @@ import logging
 
 from django.views.generic import TemplateView
 from django.views.generic import ListView
+from django.views.generic import UpdateView
 
 from apps.personal_info.models import Person
 from apps.personal_info.models import WebRequest
@@ -57,3 +58,11 @@ class RequestsView(ListView):
         for obj in queryset:
             LOGGER_DEBUG.debug(obj.__unicode__())
         return queryset
+
+
+class PersonUpdateView(UpdateView):
+    """
+        The update page view for my application
+    """
+    model = Person
+    template_name = 'personal_info/edit.html'

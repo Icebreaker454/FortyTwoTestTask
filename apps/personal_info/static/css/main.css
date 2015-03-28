@@ -1,9 +1,5 @@
-body {
-    background-color: #868686;
-}
-
 .row  {
-    background-color: #bbbbbb;
+    background-color: #575757;
 }
 
 .error {
@@ -31,20 +27,11 @@ body {
     border-bottom: 2px solid black;
 }
 
-
-h1, h2, h3, h4, a, p, tr, td, th{
-    color: black!important;
-}
-
 #request-link {
     border-bottom: 2px solid black;
-    background-color: #bbbbbb;
     border-radius: 15px;
-}
-#request-link a {
-    color: black;
 }
 
 .table-striped {
-    background-color: #bbbbbb !important;
+    background-color: inherit !important;
 }
