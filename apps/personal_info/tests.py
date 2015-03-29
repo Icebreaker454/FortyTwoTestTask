@@ -93,7 +93,7 @@ class RequestsPageTest(TestCase):
 
     def test_time_ordering(self):
         """ Test the requests ordering by time """
-        requests = WebRequest.objects.order_by('-time')
+        requests = WebRequest.objects.order_by('time')
         response = self.client.get(reverse('requests'))
 
         for i, request in enumerate(requests):

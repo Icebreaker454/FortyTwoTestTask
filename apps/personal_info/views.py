@@ -52,8 +52,23 @@ class RequestsView(ListView):
     template_name = 'personal_info/requests.html'
     context_object_name = 'requests'
 
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Overridden method that logs the request
+        :param request: the request that comes in
+        :param args: arguments
+        :param kwargs: keyword arguments
+        :return:
+        """
+        LOGGER_INFO.info(request.path)
+        return super(RequestsView, self).dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
-        queryset = WebRequest.objects.order_by('-time')[:10]
+        """
+        The method that gets the QuerySet for the ListView
+        :return: QuerySet for the view
+        """
+        queryset = WebRequest.objects.order_by('time')[:10]
         for obj in queryset:
             LOGGER_DEBUG.debug(obj.__unicode__())
         return queryset
