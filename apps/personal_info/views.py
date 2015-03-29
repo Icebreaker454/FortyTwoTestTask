@@ -8,6 +8,7 @@ import simplejson
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
@@ -18,6 +19,17 @@ from apps.personal_info.models import WebRequest
 
 LOGGER_INFO = logging.getLogger('personal_info.info')
 LOGGER_DEBUG = logging.getLogger('personal_info.debug')
+
+
+class LoginRequiredMixin(object):
+    """
+    Class that implements @login_required functionality
+    into a class-based view
+    """
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view)
 
 
 class IndexView(TemplateView):
@@ -70,7 +82,7 @@ class RequestsView(ListView):
         return queryset
 
 
-class PersonUpdateView(UpdateView):
+class PersonUpdateView(LoginRequiredMixin, UpdateView):
     """
         The update page view for my application
     """

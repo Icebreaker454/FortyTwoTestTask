@@ -148,13 +148,26 @@ class RequestsPageTest(TestCase):
 
 class EditPageTest(TestCase):
     """ The edit page test case """
-    def test_page_existence(self):
-        """ Test whether the edit page exists """
+    def test_user_login(self):
+        """ Test whether the anonymous user is redirected to login page """
         response = self.client.get(reverse('update'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertTemplateUsed(response, 'personal_info/login.html')
+
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
+
+        response = self.client.get(reverse('update'))
+        self.assertIn('42 Coffee Cups Test Assignment', response.content)
 
     def test_page_correct_person(self):
         """ Ensure that the edit page displays correct person """
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
         response = self.client.get(reverse('update'))
         self.assertIn('42 Coffee Cups Test Assignment', response.content)
         self.assertIn('Paul', response.content)
@@ -171,6 +184,10 @@ class EditPageTest(TestCase):
 
     def test_form_valid(self):
         """ Test the form with posting valid data """
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
         response = self.client.post(
             reverse('update'),
             {
@@ -190,6 +207,10 @@ class EditPageTest(TestCase):
 
     def test_form_invalid(self):
         """ Test the form with posting invalid data """
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
         response = self.client.post(
             reverse('update'),
             {
