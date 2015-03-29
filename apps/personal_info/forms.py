@@ -4,6 +4,7 @@
 """
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse
+from django.contrib.auth.forms import AuthenticationForm
 
 from crispy_forms.bootstrap import Div
 from crispy_forms.helper import FormHelper
@@ -12,6 +13,31 @@ from crispy_forms.layout import Submit
 from crispy_forms.layout import Layout
 
 from apps.personal_info.models import Person
+
+
+class LogInForm(AuthenticationForm):
+    """ The model form for user logging in """
+    def __init__(self, *args, **kwargs):
+        """ Model form initalization method"""
+        super(LogInForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_class = 'login-form active'
+        self.helper.form_action = reverse('login')
+        self.helper.form_method = 'POST'
+
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+
+        self.helper.layout = Layout(
+            Div(
+                'username',
+                'password'
+            ),
+            Div(
+                Submit('login', 'Log in', css_class='btn btn-link')
+            )
+        )
 
 
 class PersonUpdateForm(ModelForm):

@@ -44,6 +44,15 @@
   animation-delay: -0.32s;
 }
 
+.login-form input{
+    max-width: 300px;
+}
+
+.top-user {
+    margin-top: 35px;
+    text-align: right;
+}
+
 .spinner .bounce2 {
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;

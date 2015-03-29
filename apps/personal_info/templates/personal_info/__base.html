@@ -19,10 +19,17 @@
 <body>
   <div class="container" id="container">
     <div class="row" id="header">
-      <div class="col-xs-12" id="logo">
-        {% block logo %}
-          <h1><a href="{% url 'home' %}">42 Coffee Cups Test Assignment</a></h1>
-        {% endblock %}
+      <div class="col-xs-7" id="logo">
+          {% block logo %}
+            <h1><a href="{% url 'home' %}">42 Coffee Cups Test Assignment</a></h1>
+          {% endblock %}
+      </div>
+      <div class="col-xs-5">
+        {% if user.is_authenticated %}
+            <h5 class="top-user">Hello, {{ user.get_username }}(<a href="{% url 'logout' %}">Log out</a>)</h5>
+        {% else %}
+            <h5 class="top-user"><a href="{% url 'login' %}">Log in</a></h5>
+        {% endif %}
       </div>
     </div>
     {% block status_message %}

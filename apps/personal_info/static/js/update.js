@@ -11,7 +11,7 @@ function initEditPage() {
         },
         success: function (data, status, xhr) {
             $('div[class="spinner"]').hide();
-            $('.alert-success').html("<h3>Form posted</h3>");
+            $('.alert-success').html("<h3>Form submited</h3>");
             setTimeout(function() {
                  $('#loading-indicator').hide();
             }, 3000);

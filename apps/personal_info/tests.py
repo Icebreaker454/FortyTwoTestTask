@@ -152,7 +152,7 @@ class EditPageTest(TestCase):
         """ Test whether the anonymous user is redirected to login page """
         response = self.client.get(reverse('update'))
         self.assertEqual(response.status_code, 302)
-        self.assertTemplateUsed(response, 'personal_info/login.html')
+        self.assertTemplateUsed('personal_info/login.html')
 
         self.client.login(
             username='admin',
