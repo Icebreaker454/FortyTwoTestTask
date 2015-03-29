@@ -72,3 +72,13 @@ class RequestsView(ListView):
         for obj in queryset:
             LOGGER_DEBUG.debug(obj.__unicode__())
         return queryset
+
+    def get_context_data(self, **kwargs):
+        """
+        The method to add context data
+        :param kwargs: keyword arguments
+        :return: page context
+        """
+        context = super(RequestsView, self).get_context_data(**kwargs)
+        context['requests_count'] = WebRequest.objects.count()
+        return context

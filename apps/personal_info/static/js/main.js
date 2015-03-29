@@ -1,22 +1,24 @@
 function AsyncRequestUpdate() {
     var initial_title = $('title').text();
     var unread = 0;
+    var prev_count = parseInt($('#request-table').data('count'));
     setInterval(function() {
         var table = $('#request-table');
-        var last_time = $('td:first').text();
         $.get(
             "/requests/",
             function(data){
-                table.html($(data).find('#request-table'));
-                table.attr("class", "table table-striped");
-                if($('td:first').text() != last_time) {
-                    unread++;
-                    document.title = '(' + unread + ')' + initial_title;
+                $('#request-table').html($(data).find('#request-table'));
+                var table = $('#request-table')
+                var count = parseInt($(data).find('#request-table').data('count'));
+
+                if(count != prev_count ) {
+                    unread = count - prev_count;
+                    if(unread != 0){
+                        document.title = '(' + unread + ')' + initial_title;
+                    }
                 }
                 if(document.hasFocus()){
-                    unread = 0;
-                }
-                if(unread == 0) {
+                    prev_count = count;
                     document.title = initial_title;
                 }
             },
