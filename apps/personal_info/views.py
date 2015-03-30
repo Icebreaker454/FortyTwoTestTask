@@ -131,7 +131,22 @@ class PersonUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'personal_info/edit.html'
     form_class = PersonUpdateForm
 
+    def dispatch(self, request, *args, **kwargs):
+        """
+        This method is used to log the request
+        :param request: the request that comes in
+        :param args: arguments
+        :param kwargs: keyword arguments
+        :return: base class dispatch() method
+        """
+        LOGGER_DEBUG.debug(request.path)
+        return super(PersonUpdateView, self).dispatch(request, *args, **kwargs)
+
     def get_success_url(self):
+        """
+        Method to get UpdateView success url
+        :return: the success url to go after update
+        """
         return "%s?status_message=Modified successfully" % reverse('home')
 
     def get_object(self, queryset=None):
@@ -141,10 +156,16 @@ class PersonUpdateView(LoginRequiredMixin, UpdateView):
         """
         return Person.objects.first()
 
-    def post(self, request, *args, **kwargs):
-        if request.is_ajax():
+    def form_valid(self, form):
+        """
+        Method to call when a valid form is posted
+        :param form: the form that is being submitted
+        :return:
+        """
+        if self.request.is_ajax():
+            setattr(self, 'object', form.save())
             return HttpResponse(
-                simplejson.dumps(request.POST),
+                simplejson.dumps(self.request.POST),
                 content_type='application/json'
             )
-        return super(PersonUpdateView, self).post(request, *args, **kwargs)
+        return super(PersonUpdateView, self).form_valid(form)

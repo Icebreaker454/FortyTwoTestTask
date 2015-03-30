@@ -2,6 +2,9 @@
 """
     Functional tests for my application
 """
+import os
+
+from PIL import Image
 
 from django.test import TestCase
 from django.test import RequestFactory
@@ -13,6 +16,7 @@ from django.http import HttpRequest
 from apps.personal_info.models import Person
 from apps.personal_info.middleware import RequestLogMiddleware
 from apps.personal_info.models import WebRequest
+from fortytwo_test_task.settings import BASE_DIR
 
 
 class MainPageTest(TestCase):
@@ -148,6 +152,35 @@ class RequestsPageTest(TestCase):
 
 class EditPageTest(TestCase):
     """ The edit page test case """
+
+    def test_image_huge(self):
+        """ Test whether large images are scaled to proper size """
+        person = Person.objects.first()
+        person.profile_photo = open(
+            os.path.join(
+                BASE_DIR,
+                'assets',
+                'img',
+                'test_large.jpg'
+            )
+        )
+        person.save()
+        self.assertEqual(person.profile_photo.size, (200, 200))
+
+    def test_image_small(self):
+        """ Test whether small images are scaled to proper size """
+        person = Person.objects.first()
+        person.profile_photo = open(
+            os.path.join(
+                BASE_DIR,
+                'assets',
+                'img',
+                'test_small.jpg'
+            )
+        )
+        person.save()
+        self.assertEqual(person.profile_photo.size, (200, 200))
+
     def test_user_login(self):
         """ Test whether the anonymous user is redirected to login page """
         response = self.client.get(reverse('update'))

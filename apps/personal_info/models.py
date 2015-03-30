@@ -28,13 +28,22 @@ class Person(models.Model):
     bio = models.TextField()
     contacts_email = models.EmailField(
         max_length=128,
-        blank=False
+        blank=False,
+        verbose_name=u'Email'
     )
-    contacts_jabber_id = models.EmailField()
+    contacts_jabber_id = models.EmailField(
+        blank=True,
+        verbose_name=u'Jabber JID'
+    )
     contacts_skype_id = models.CharField(
-        max_length=32
+        blank=True,
+        max_length=32,
+        verbose_name=u'Skype:'
     )
-    contacts_other = models.TextField()
+    contacts_other = models.TextField(
+        blank=True,
+        verbose_name=u'Other'
+    )
 
     def __unicode__(self):
         """

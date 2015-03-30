@@ -15,3 +15,4 @@ media
 *.dat
 .env
 *.log
+*.save
