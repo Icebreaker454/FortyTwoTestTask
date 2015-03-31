@@ -22,6 +22,8 @@ class Migration(migrations.Migration):
                 ('contacts_jabber_id', models.EmailField(max_length=75)),
                 ('contacts_skype_id', models.CharField(max_length=32)),
                 ('contacts_other', models.TextField()),
+                ('picture', models.ImageField(upload_to='pictures')),
+
             ],
             options={
             },
