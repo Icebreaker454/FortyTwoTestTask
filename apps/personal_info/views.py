@@ -70,6 +70,10 @@ class LogInView(FormView):
         return super(LogInView, self).form_valid(form)
 
     def get_success_url(self):
+        """
+        This method gets the FormView success url
+        :return: the FormView success url
+        """
         return reverse('update')
 
 
@@ -117,6 +121,10 @@ class RequestsView(ListView):
     context_object_name = 'requests'
 
     def get_queryset(self):
+        """
+        This method gets the queryset object for the ListView
+        :return: the ListView queryset
+        """
         queryset = WebRequest.objects.order_by('-time')[:10]
         for obj in queryset:
             LOGGER_DEBUG.debug(obj.__unicode__())
@@ -133,6 +141,7 @@ class AjaxFormMixin(object):
         :return:
         """
         response = super(AjaxFormMixin, self).form_valid(form)
+        LOGGER_DEBUG.debug(form.data)
         if self.request.is_ajax():
             return HttpResponse(
                 json.dumps(form.data),
@@ -142,6 +151,7 @@ class AjaxFormMixin(object):
             return response
 
     def form_invalid(self, form):
+        LOGGER_DEBUG.debug(form.errors)
         response = super(AjaxFormMixin, self).form_invalid(form)
         if self.request.is_ajax():
             return HttpResponse(
@@ -168,7 +178,7 @@ class PersonUpdateView(LoginRequiredMixin, AjaxFormMixin, UpdateView):
         :param kwargs: keyword arguments
         :return: base class dispatch() method
         """
-        LOGGER_DEBUG.debug(request.path)
+        LOGGER_INFO.info(request.path)
         return super(PersonUpdateView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):

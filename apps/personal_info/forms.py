@@ -60,7 +60,10 @@ class PersonUpdateForm(ModelForm):
 
         self.helper.layout = Layout(
             Div(
-
+                Div(
+                    HTML('<img id="preview" width="200"\
+                     height="200" class="img img-rounded">')
+                ),
                 Div(
                     'picture',
                 ),

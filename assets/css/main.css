@@ -53,7 +53,8 @@
 }
 
 .top-user {
-    margin-top: 35px;
+    height: 90px;
+    line-height: 90px;
     text-align: right;
 }
 

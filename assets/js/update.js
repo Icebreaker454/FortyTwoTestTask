@@ -1,8 +1,21 @@
 /**
  * Created by icebreaker on 28.03.15.
  */
-function initEditPage() {
 
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#preview').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function initEditPage() {
     $('form').ajaxForm({
         dataType: 'json',
         beforeSubmit: function () {
@@ -17,13 +30,15 @@ function initEditPage() {
         },
         success: function (data, status) {
             $('div[class="spinner"]').hide();
-            $('.alert-success').html("<h3>Form submitted</h3>");
-            setTimeout(function() {
-                 $('#loading-indicator').hide();
-                 $('input').removeAttr("disabled");
-                 $('textarea').removeAttr("disabled");
-            }, 3000);
+            $('.alert-success').html("<h3>Form submitted! <a href='/'> Go to main page</a></h3>");
+            $('input').removeAttr("disabled");
+            $('textarea').removeAttr("disabled");
         }
+    });
+
+
+    $("#id_picture").change(function(){
+        readURL(this);
     });
 
     return false;
@@ -38,7 +53,6 @@ function initDateFields() {
 }
 
 $(document).ready(function(){
-
     initEditPage();
     initDateFields();
 });
