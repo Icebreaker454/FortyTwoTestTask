@@ -3,6 +3,7 @@
 """
     The models file for ticket1
 """
+from PIL import ExifTags
 from PIL import Image
 
 from django.db import models
@@ -70,6 +71,18 @@ class Person(models.Model):
                 # We require a resize
                 filename = str(self.picture.path)
                 img = Image.open(filename)
+
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        break
+                exif = dict(img._getexif().items())
+
+                if exif[orientation] == 3:
+                    img = img.rotate(180, expand=True)
+                elif exif[orientation] == 6:
+                    img = img.rotate(270, expand=True)
+                elif exif[orientation] == 8:
+                    img = img.rotate(90, expand=True)
                 # thumbnail() will maintain the aspect ratio
                 img = img.resize((200, 200), Image.ANTIALIAS)
                 img.save(filename)
