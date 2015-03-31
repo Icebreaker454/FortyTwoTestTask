@@ -157,8 +157,8 @@ class RequestsPageTest(TestCase):
 class EditPageTest(TestCase):
     """ The edit page test case """
 
-    def test_image_size(self):
-        """ Test whether images are scaled to proper size """
+    def setUp(self):
+        """ Initialize some test data"""
         image = Image.open(
             StringIO(open(
                 os.path.join(
@@ -172,7 +172,7 @@ class EditPageTest(TestCase):
         )
         image_file = StringIO()
         image.save(image_file, format='JPEG', quality=90)
-        uploaded_file = InMemoryUploadedFile(
+        self.uploaded_file = InMemoryUploadedFile(
             image_file,
             None,
             'test.jpg',
@@ -180,32 +180,37 @@ class EditPageTest(TestCase):
             image_file.len,
             None
         )
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
+
+    def test_image(self):
+        """
+        Test whether images are scaled to proper size and
+        deleted from /uploads/ upon removal
+        """
         person = Person.objects.first()
-        person.picture = uploaded_file
+        person.picture = self.uploaded_file
         person.save()
         self.assertEqual(Person.objects.first().picture.width, 200)
         self.assertEqual(Person.objects.first().picture.height, 200)
+        path = person.picture.path
+        person.picture.delete()
+        person.save()
+        self.assertFalse(os.path.exists(path))
 
     def test_user_login(self):
         """ Test whether the anonymous user is redirected to login page """
         response = self.client.get(reverse('update'))
+        self.assertIn('42 Coffee Cups Test Assignment', response.content)
+        self.client.logout()
+        response = self.client.get(reverse('update'))
         self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed('personal_info/login.html')
 
-        self.client.login(
-            username='admin',
-            password='admin'
-        )
-
-        response = self.client.get(reverse('update'))
-        self.assertIn('42 Coffee Cups Test Assignment', response.content)
-
     def test_page_correct_person(self):
         """ Ensure that the edit page displays correct person """
-        self.client.login(
-            username='admin',
-            password='admin'
-        )
         response = self.client.get(reverse('update'))
         self.assertIn('42 Coffee Cups Test Assignment', response.content)
         self.assertIn('Paul', response.content)
@@ -222,10 +227,6 @@ class EditPageTest(TestCase):
 
     def test_form_valid(self):
         """ Test the form with posting valid data """
-        self.client.login(
-            username='admin',
-            password='admin'
-        )
         response = self.client.post(
             reverse('update'),
             {
@@ -245,10 +246,6 @@ class EditPageTest(TestCase):
 
     def test_form_invalid(self):
         """ Test the form with posting invalid data """
-        self.client.login(
-            username='admin',
-            password='admin'
-        )
         response = self.client.post(
             reverse('update'),
             {

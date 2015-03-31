@@ -184,5 +184,3 @@ class PersonUpdateView(LoginRequiredMixin, AjaxFormMixin, UpdateView):
         :return: returns the object to edit
         """
         return Person.objects.first()
-
-
