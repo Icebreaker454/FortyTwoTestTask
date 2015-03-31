@@ -19,7 +19,6 @@ class Migration(SchemaMigration):
             ('contacts_jabber_id', self.gf('django.db.models.fields.EmailField')(max_length=75, blank=True)),
             ('contacts_skype_id', self.gf('django.db.models.fields.CharField')(max_length=32, blank=True)),
             ('contacts_other', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('picture', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True)),
         ))
         db.send_create_signal(u'personal_info', ['Person'])
 
@@ -55,8 +54,7 @@ class Migration(SchemaMigration):
             'contacts_skype_id': ('django.db.models.fields.CharField', [], {'max_length': '32', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'picture': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
+            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '128'})
         },
         u'personal_info.webrequest': {
             'Meta': {'object_name': 'WebRequest'},
