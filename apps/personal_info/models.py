@@ -3,6 +3,8 @@
 """
     The models file for ticket1
 """
+from PIL import Image
+
 from django.db import models
 
 
@@ -28,13 +30,27 @@ class Person(models.Model):
     bio = models.TextField()
     contacts_email = models.EmailField(
         max_length=128,
-        blank=False
+        blank=False,
+        verbose_name=u'Email'
     )
-    contacts_jabber_id = models.EmailField()
+    contacts_jabber_id = models.EmailField(
+        blank=True,
+        verbose_name=u'Jabber JID'
+    )
     contacts_skype_id = models.CharField(
-        max_length=32
+        blank=True,
+        max_length=32,
+        verbose_name=u'Skype:'
     )
-    contacts_other = models.TextField()
+    contacts_other = models.TextField(
+        blank=True,
+        verbose_name=u'Other'
+    )
+    picture = models.ImageField(
+        upload_to='pictures',
+        blank=True,
+        null=True
+    )
 
     def __unicode__(self):
         """
@@ -42,6 +58,23 @@ class Person(models.Model):
         :return: model's string representation
         """
         return "%s %s" % (self.first_name, self.last_name)
+
+    def save(self, force_insert=False, force_update=False, using=None):
+        """ Method to scale all pictures to 200x200 """
+        if self.picture:
+            super(Person, self).save(force_insert, force_update)
+
+            pw = self.picture.width
+            ph = self.picture.height
+            if (pw > 200) or (ph > 200):
+                # We require a resize
+                filename = str(self.picture.path)
+                img = Image.open(filename)
+                # thumbnail() will maintain the aspect ratio
+                img = img.resize((200, 200), Image.ANTIALIAS)
+                img.save(filename)
+        else:
+            super(Person, self).save(force_insert, force_update)
 
 
 class WebRequest(models.Model):

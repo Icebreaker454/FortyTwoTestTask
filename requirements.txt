@@ -3,3 +3,5 @@ Django==1.6.7
 flake8
 South
 simplejson
+django-crispy-forms
+Pillow==2.6.0

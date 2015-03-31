@@ -1,9 +1,16 @@
 {% extends 'personal_info/__base.html' %}
+{% block status_message %}
+<!-- Status message -->
+{% if status_message %}
+  <div class="alert alert-success">
+    {{ status_message }}
+  </div>
+{% endif %}
+{% endblock status_message %}
+{% block error %}
+{% endblock %}
+
 {% block layout %}
-    <div class="row" id="error">
-        {% block error %}
-        {% endblock %}
-    </div>
     <div class="row" id="content">
       <div class="col-xs-6" id="info-column">
         {% block info %}

@@ -1,0 +1,9 @@
+{% extends 'personal_info/_l_edit_page.html'%}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block update_form %}
+  {% crispy form %}
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/update.js' %}"></script>
+{% endblock %}
