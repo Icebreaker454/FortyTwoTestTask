@@ -1,7 +1,9 @@
-from django.conf.urls import patterns, include, url
-
+from django.conf.urls import patterns
+from django.conf.urls import include
+from django.conf.urls import url
+from django.conf.urls.static import static
 from django.contrib import admin
-admin.autodiscover()
+
 
 from apps.personal_info.views import IndexView
 from apps.personal_info.views import RequestsView
@@ -10,6 +12,7 @@ from apps.personal_info.views import LogInView
 from apps.personal_info.views import LogOutView
 from fortytwo_test_task.settings import common
 
+admin.autodiscover()
 
 urlpatterns = patterns(
     '',
@@ -22,14 +25,6 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 )
 
-urlpatterns += patterns(
-    '',
-    url(
-        r'^static/(?P<path>.*)$',
-        'django.views.static.serve',
-        {
-            'document_root': common.MEDIA_ROOT,
-            'show_indexes': True
-        }
-    ),
+urlpatterns += static(
+    common.MEDIA_URL, document_root=common.MEDIA_ROOT
 )

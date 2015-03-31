@@ -5,11 +5,13 @@
 import os
 
 from PIL import Image
+from StringIO import StringIO
 
 from django.test import TestCase
 from django.test import RequestFactory
 from django.core.urlresolvers import reverse_lazy
 from django.core.urlresolvers import reverse
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.contrib.auth.models import User
 from django.http import HttpRequest
 
@@ -17,6 +19,8 @@ from apps.personal_info.models import Person
 from apps.personal_info.middleware import RequestLogMiddleware
 from apps.personal_info.models import WebRequest
 from fortytwo_test_task.settings import BASE_DIR
+
+Image.init()
 
 
 class MainPageTest(TestCase):
@@ -153,33 +157,34 @@ class RequestsPageTest(TestCase):
 class EditPageTest(TestCase):
     """ The edit page test case """
 
-    def test_image_huge(self):
-        """ Test whether large images are scaled to proper size """
-        person = Person.objects.first()
-        person.profile_photo = open(
-            os.path.join(
-                BASE_DIR,
-                'assets',
-                'img',
-                'test_large.jpg'
-            )
+    def test_image_size(self):
+        """ Test whether images are scaled to proper size """
+        image = Image.open(
+            StringIO(open(
+                os.path.join(
+                    BASE_DIR,
+                    'assets',
+                    'img',
+                    'test_large.jpg'
+                )
+            ).read()
+            ),
         )
-        person.save()
-        self.assertEqual(person.profile_photo.size, (200, 200))
-
-    def test_image_small(self):
-        """ Test whether small images are scaled to proper size """
-        person = Person.objects.first()
-        person.profile_photo = open(
-            os.path.join(
-                BASE_DIR,
-                'assets',
-                'img',
-                'test_small.jpg'
-            )
+        image_file = StringIO()
+        image.save(image_file, format='JPEG', quality=90)
+        uploaded_file = InMemoryUploadedFile(
+            image_file,
+            None,
+            'test.jpg',
+            'image/jpeg',
+            image_file.len,
+            None
         )
+        person = Person.objects.first()
+        person.picture = uploaded_file
         person.save()
-        self.assertEqual(person.profile_photo.size, (200, 200))
+        self.assertEqual(Person.objects.first().picture.width, 200)
+        self.assertEqual(Person.objects.first().picture.height, 200)
 
     def test_user_login(self):
         """ Test whether the anonymous user is redirected to login page """

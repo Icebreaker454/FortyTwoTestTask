@@ -48,6 +48,10 @@
     max-width: 300px;
 }
 
+.img-rounded {
+    margin-bottom: 10px;
+}
+
 .top-user {
     margin-top: 35px;
     text-align: right;

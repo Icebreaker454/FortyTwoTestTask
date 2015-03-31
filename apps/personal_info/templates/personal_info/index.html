@@ -10,6 +10,15 @@
 {% endif %}
 {% endblock %}
 
+{% block photo %}
+  <h2>Photo:</h2>
+  {% if person.picture %}
+    <img class="img img-rounded" src="{{ person.picture.url }}" alt="{% static 'no_photo.jpg' %}"/>
+  {% else %}
+    <p>No photo.</p>
+  {% endif %}
+{% endblock %}
+
   {% block info %}
     <h2 id="personal-info"><a href="{% url 'update' %}">Personal information</a></h2>
     <h4>First name:</h4>

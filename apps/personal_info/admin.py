@@ -15,7 +15,8 @@ class PersonAdmin(admin.ModelAdmin):
                     'first_name',
                     'last_name',
                     'birth_date',
-                    'bio'
+                    'bio',
+                    'picture'
                     )
             }
         ),

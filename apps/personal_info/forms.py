@@ -18,7 +18,7 @@ from apps.personal_info.models import Person
 class LogInForm(AuthenticationForm):
     """ The model form for user logging in """
     def __init__(self, *args, **kwargs):
-        """ Model form initalization method"""
+        """ Model form initialization method"""
         super(LogInForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
@@ -59,6 +59,12 @@ class PersonUpdateForm(ModelForm):
         self.helper.html5_required = True
 
         self.helper.layout = Layout(
+            Div(
+
+                Div(
+                    'picture',
+                ),
+            ),
             Div(
                 Div(
                     HTML("<h2 id='personal-info'>Personal Information</h2>"),

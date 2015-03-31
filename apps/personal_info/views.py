@@ -4,7 +4,7 @@
 """
 
 import logging
-import simplejson
+import simplejson as json
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -123,7 +123,36 @@ class RequestsView(ListView):
         return queryset
 
 
-class PersonUpdateView(LoginRequiredMixin, UpdateView):
+class AjaxFormMixin(object):
+    """ This class adds functionality to post forms via AJAX """
+
+    def form_valid(self, form):
+        """
+        Method to call when a valid form is posted
+        :param form: the form that is being submitted
+        :return:
+        """
+        response = super(AjaxFormMixin, self).form_valid(form)
+        if self.request.is_ajax():
+            return HttpResponse(
+                json.dumps(form.data),
+                content_type='application/json'
+            )
+        else:
+            return response
+
+    def form_invalid(self, form):
+        response = super(AjaxFormMixin, self).form_invalid(form)
+        if self.request.is_ajax():
+            return HttpResponse(
+                json.dumps(form.errors),
+                content_type='application/json'
+            )
+        else:
+            return response
+
+
+class PersonUpdateView(LoginRequiredMixin, AjaxFormMixin, UpdateView):
     """
         The update page view for my application
     """
@@ -156,16 +185,4 @@ class PersonUpdateView(LoginRequiredMixin, UpdateView):
         """
         return Person.objects.first()
 
-    def form_valid(self, form):
-        """
-        Method to call when a valid form is posted
-        :param form: the form that is being submitted
-        :return:
-        """
-        if self.request.is_ajax():
-            setattr(self, 'object', form.save())
-            return HttpResponse(
-                simplejson.dumps(self.request.POST),
-                content_type='application/json'
-            )
-        return super(PersonUpdateView, self).form_valid(form)
+
