@@ -8,6 +8,8 @@ from PIL import Image
 
 from django.db import models
 
+BASE_WIDTH = 200
+
 
 class Person(models.Model):
     """ The Person model itself """
@@ -86,7 +88,10 @@ class Person(models.Model):
                         img = img.rotate(90, expand=True)
                 except AttributeError:
                     pass
-                img = img.resize((200, 200), Image.ANTIALIAS)
+
+                w_percent = (BASE_WIDTH/float(img.size[0]))
+                h_size = int((float(img.size[1])*float(w_percent)))
+                img = img.resize((BASE_WIDTH, h_size), Image.ANTIALIAS)
                 img.save(filename)
         else:
             super(Person, self).save(force_insert, force_update)
