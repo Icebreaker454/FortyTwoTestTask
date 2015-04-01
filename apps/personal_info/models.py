@@ -6,6 +6,8 @@
 from PIL import Image
 
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
 
 
 class Person(models.Model):
@@ -52,6 +54,20 @@ class Person(models.Model):
         null=True
     )
 
+    def get_admin_url(self):
+        """
+        This method returns the admin edit url for the model
+        :return: the admin edit url for the model
+        """
+        content_type = ContentType.objects.get_for_model(self.__class__)
+        return reverse(
+            'admin:%s_%s_change' % (
+                content_type.app_label,
+                content_type.model
+            ),
+            args=(self.id,)
+        )
+
     def __unicode__(self):
         """
         The method to represent model as a string
@@ -86,6 +102,20 @@ class WebRequest(models.Model):
     post = models.TextField()
     remote_address = models.IPAddressField()
     method = models.CharField(max_length=7)
+
+    def get_admin_url(self):
+        """
+        This method returns the admin edit url for the model
+        :return: the admin edit url for the model
+        """
+        content_type = ContentType.objects.get_for_model(self.__class__)
+        return reverse(
+            'admin:%s_%s_change' % (
+                content_type.app_label,
+                content_type.model
+            ),
+            args=(self.id,)
+        )
 
     def __unicode__(self):
         """

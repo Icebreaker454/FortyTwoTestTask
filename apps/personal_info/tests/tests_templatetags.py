@@ -39,6 +39,21 @@ class TemplateTagsTest(TestCase):
         )
         self.assertIn(person.get_admin_url(), rendered)
 
+    def test_tags_invalid_params(self):
+        """
+        Test the behaviour of out template tag when we parse
+        something different of Model objects
+        """
+        not_a_model = 'Hello! I am NOT a model instance'
+        template = Template(
+            '{% load custom_tags %}{% edit_link object %}'
+        )
+        rendered = template.render(
+            Context({'object': not_a_model})
+        )
+
+        self.assertEqual(rendered, '')
+
     def test_tags_syntax_errors(self):
         """
         Test whether the syntax errors are dispatched
@@ -52,6 +67,11 @@ class TemplateTagsTest(TestCase):
         self.assertRaises(
             TemplateSyntaxError,
             render,
+            '{% load custom_tags %}{% edit_link "quoted"object %}'
+        )
+        self.assertRaises(
+            TemplateSyntaxError,
+            render,
             '{% load custom_tags %}{% edit_link if not %}'
         )
         self.assertRaises(
@@ -59,5 +79,3 @@ class TemplateTagsTest(TestCase):
             render,
             '{% load custom_tags %}{% edit_link object asd qwd %}'
         )
-
-

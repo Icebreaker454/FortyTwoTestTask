@@ -1,6 +1,7 @@
 {% extends 'personal_info/_l_index_page.html' %}
 
 {% load staticfiles %}
+{% load custom_tags %}
 
 {% block error %}
 {% if not person %}
@@ -10,34 +11,38 @@
 {% endif %}
 {% endblock %}
 
-  {% block info %}
-    <h2 id="personal-info"><a href="{% url 'update' %}">Personal information</a></h2>
-    <h4>Photo:</h4>
-    {% if person.picture %}
+{% block info %}
+  <h2 id="personal-info"><a href="{% url 'update' %}" >Personal information</a></h2>
+  <small><a href="{% edit_link person %}">(Edit at admin page)</a></small>
+  <h4>Photo:</h4>
+  {% if person.picture %}
     <img class="img img-rounded" src="{{ person.picture.url }}" alt="{% static 'no_photo.jpg' %}"/>
-    {% else %}
+  {% else %}
     <p>No photo.</p>
-    {% endif %}
-    <h4>First name:</h4>
-    <p>{{ person.first_name }}</p>
-    <h4>Last name:</h4>
-    <p>{{ person.last_name }}</p>
-    <h4>Birth date:</h4>
-    <p>{{ person.birth_date }}</p>
-    <h4>Bio:</h4>
-    <p>{{ person.bio }}</p>
-  {% endblock %}
-  {% block contacts %}
-    <h2 id="contacts"><a href="{% url 'update' %}">Contacts</a></h2>
-    <h4>Email:</h4>
-    <p>{{ person.contacts_email }}</p>
-    <h4>Jabber JID:</h4>
-    <p>{{ person.contacts_jabber_id }}</p>
-    <h4>Skype:</h4>
-    <p>{{ person.contacts_skype_id }}</p>
-    <h4>Other:</h4>
-    <p>{{ person.contacts_other }}</p>
-  {% endblock %}
-  {% block link %}
-    <h4><a href="{% url 'requests' %}">Requests</a></h4>
-  {% endblock %}
+  {% endif %}
+  <h4>First name:</h4>
+  <p>{{ person.first_name }}</p>
+  <h4>Last name:</h4>
+  <p>{{ person.last_name }}</p>
+  <h4>Birth date:</h4>
+  <p>{{ person.birth_date }}</p>
+  <h4>Bio:</h4>
+  <p>{{ person.bio }}</p>
+{% endblock %}
+
+{% block contacts %}
+  <h2 id="contacts"><a href="{% url 'update' %}">Contacts</a></h2>
+  <small><a href="{% edit_link person %}">(Edit at admin page)</a></small>
+  <h4>Email:</h4>
+  <p>{{ person.contacts_email }}</p>
+  <h4>Jabber JID:</h4>
+  <p>{{ person.contacts_jabber_id }}</p>
+  <h4>Skype:</h4>
+  <p>{{ person.contacts_skype_id }}</p>
+  <h4>Other:</h4>
+  <p>{{ person.contacts_other }}</p>
+{% endblock %}
+
+{% block link %}
+  <h4><a href="{% url 'requests' %}">Requests</a></h4>
+{% endblock %}
