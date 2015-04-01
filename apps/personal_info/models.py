@@ -75,15 +75,17 @@ class Person(models.Model):
                 for orientation in ExifTags.TAGS.keys():
                     if ExifTags.TAGS[orientation] == 'Orientation':
                         break
-                exif = dict(img._getexif().items())
+                try:
+                    exif = dict(img._getexif().items())
 
-                if exif[orientation] == 3:
-                    img = img.rotate(180, expand=True)
-                elif exif[orientation] == 6:
-                    img = img.rotate(270, expand=True)
-                elif exif[orientation] == 8:
-                    img = img.rotate(90, expand=True)
-                # thumbnail() will maintain the aspect ratio
+                    if exif[orientation] == 3:
+                        img = img.rotate(180, expand=True)
+                    elif exif[orientation] == 6:
+                        img = img.rotate(270, expand=True)
+                    elif exif[orientation] == 8:
+                        img = img.rotate(90, expand=True)
+                except AttributeError:
+                    pass
                 img = img.resize((200, 200), Image.ANTIALIAS)
                 img.save(filename)
         else:
