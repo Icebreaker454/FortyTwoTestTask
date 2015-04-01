@@ -48,20 +48,21 @@ class CommandsTest(TestCase):
             len(self.err_file.readlines())
         )
 
+        self.out_file.seek(0)
+        self.err_file.seek(0)
+
         for model_data_entry in self.model_data:
             line = self.out_file.readline()
             error_line = self.err_file.readline()
             self.assertEqual('error: %s' % line, error_line)
-            data = line.strip().split('')
+            data = line.strip().split('-')
             self.assertIn(data[0], model_data_entry)
             self.assertIn(data[1], model_data_entry)
+
+        self.out_file.seek(0)
+        self.err_file.seek(0)
 
         self.assertEqual(
             len(self.out_file.readlines()),
             len(self.model_data)
         )
-
-
-
-
-
