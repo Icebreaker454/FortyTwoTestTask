@@ -14,6 +14,15 @@ class SignalsTestCase(TestCase):
     This class is the test case for testing the personal_info
     application signal_processors.
     """
+    def setUp(self):
+        """ Initialize test data """
+        self.person = Person(
+            'Paul',
+            'Pukach',
+            '25-06-1996',
+            'pavlopukach@gmail.com'
+        )
+
     def test_model_creation(self):
         """ Test whether the model creating log is stored """
         record_count = ModelLog.objects.count()
@@ -33,13 +42,21 @@ class SignalsTestCase(TestCase):
 
     def test_model_deletion(self):
         """ Test whether the model deleting is stored """
-        person = Person('Paul', 'Pukach', '25-06-1996', 'pavlopukach@gmail.com')
-        person.save()
-        person_id = person.id
+        self.person.save()
         record_count = ModelLog.objects.count()
         Person.objects.last().delete()
         self.assertEqual(record_count + 1, ModelLog.objects.count())
         last_record = ModelLog.objects.last()
         self.assertEqual(last_record.action, 'DELETE')
         self.assertEqual(last_record.model, 'Person')
-        self.assertEqual(last_record.model_id, person_id)
+        self.assertEqual(last_record.model_id, self.person.id)
+
+    def test_model_editing(self):
+        """ Test whether the model editing log is stored """
+        self.person.save()
+        self.person.bio = "Yahoo"
+        self.person.save()
+        last_record = ModelLog.objects.last()
+        self.assertEqual(last_record.action, 'UPDATE')
+        self.assertEqual(last_record.model, 'Person')
+        self.assertEqual(last_record.model_id, self.person.id)
