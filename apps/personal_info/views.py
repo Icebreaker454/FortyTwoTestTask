@@ -8,6 +8,7 @@ import simplejson as json
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth import logout
@@ -215,3 +216,21 @@ class PersonUpdateView(LoginRequiredMixin, AjaxFormMixin, UpdateView):
         :return: returns the object to edit
         """
         return Person.objects.first()
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel_button'):
+            if request.is_ajax():
+                return HttpResponse(
+                    json.dumps(
+                        {
+                            'url': '%s?status_message=Editing canceled' %
+                            reverse('home')
+                        }
+                    ),
+                    content_type='application/json'
+                )
+            return HttpResponseRedirect(
+                '%s?status_message=Editing canceled' %
+                reverse('home')
+            )
+        return super(AjaxFormMixin, self).post(request, *args, **kwargs)

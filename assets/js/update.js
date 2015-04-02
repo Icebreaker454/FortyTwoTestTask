@@ -9,7 +9,7 @@ function readURL(input) {
 
         reader.onload = function (e) {
             $('#preview').attr('src', e.target.result);
-        }
+        };
 
         reader.readAsDataURL(input.files[0]);
     }
@@ -24,15 +24,19 @@ function initEditPage() {
             }
             $('input').attr("disabled", "disabled");
             $('textarea').attr("disabled", "disabled");
-            window.scrollTo(0, 0);
             $('#loading-indicator').show();
             $('div[class="spinner"]').show();
         },
         success: function (data, status) {
-            $('div[class="spinner"]').hide();
-            $('.alert-success').html("<h3>Form submitted! <a href='/'> Go to main page</a></h3>");
-            $('input').removeAttr("disabled");
-            $('textarea').removeAttr("disabled");
+            if(data.url) {
+                $(location).attr('href', data.url)
+            }
+            else {
+                $('div[class="spinner"]').hide();
+                $('.alert-success').html("<h3>Form submitted! <a href='/'> Go to main page</a></h3>");
+                $('input').removeAttr("disabled");
+                $('textarea').removeAttr("disabled");
+            }
         }
     });
 

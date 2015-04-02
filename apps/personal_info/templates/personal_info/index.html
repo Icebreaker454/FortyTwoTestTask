@@ -12,12 +12,6 @@
 
   {% block info %}
     <h2 id="personal-info"><a href="{% url 'update' %}">Personal information</a></h2>
-    <h4>Photo:</h4>
-    {% if person.picture %}
-    <img class="img img-rounded" src="{{ person.picture.url }}" alt="{% static 'no_photo.jpg' %}"/>
-    {% else %}
-    <p>No photo.</p>
-    {% endif %}
     <h4>First name:</h4>
     <p>{{ person.first_name }}</p>
     <h4>Last name:</h4>
@@ -26,6 +20,12 @@
     <p>{{ person.birth_date }}</p>
     <h4>Bio:</h4>
     <p>{{ person.bio }}</p>
+    <h4>Photo:</h4>
+    {% if person.picture %}
+    <img class="img img-rounded" src="{{ person.picture.url }}" alt="{% static 'no_photo.jpg' %}"/>
+    {% else %}
+    <p>No photo.</p>
+    {% endif %}
   {% endblock %}
   {% block contacts %}
     <h2 id="contacts"><a href="{% url 'update' %}">Contacts</a></h2>

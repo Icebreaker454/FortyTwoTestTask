@@ -5,6 +5,9 @@
     border-radius: 15px;
 }
 
+.btn-link {
+}
+
 .alert-error {
     background-color: #660e0e;
     border-bottom: 2px solid black;
