@@ -55,9 +55,13 @@ class EditLinkNode(template.Node):
             obj = self.editable_object.resolve(context)
             if isinstance(obj, models.Model):
                 info = (obj._meta.app_label, obj._meta.module_name)
-                return reverse(
-                    'admin:%s_%s_change' % info,
-                    args=(obj.pk,)
+                return '<a href="{}">(Edit {} at Admin)</a'.format(
+                    reverse(
+                        'admin:%s_%s_change' % info,
+                        args=(obj.pk,),
+
+                    ),
+                    type(obj).__name__
                 )
             else:
                 LOGGER_INFO.info(

@@ -11,8 +11,10 @@
 {% endif %}
 {% endblock %}
 
-
 {% block info %}
+  <div>
+    {% edit_link person %}>
+  </div>
   <h2 id="personal-info"><a href="{% url 'update' %}">Personal information</a></h2>
   <h4>First name:</h4>
   <p>{{ person.first_name }}</p>
@@ -30,6 +32,7 @@
   {% endif %}
 {% endblock %}
 {% block contacts %}
+  <a href="#" style="visibility: hidden">#</a>
   <h2 id="contacts"><a href="{% url 'update' %}">Contacts</a></h2>
   <h4>Email:</h4>
   <p>{{ person.contacts_email }}</p>
