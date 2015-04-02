@@ -40,7 +40,6 @@ function initEditPage() {
         }
     });
 
-
     $("#id_picture").change(function(){
         readURL(this);
     });

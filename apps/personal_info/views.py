@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    This is the views module for the personal_info project
+This is the views module for the personal_info project
 """
 
 import logging
@@ -116,7 +116,7 @@ class IndexView(TemplateView):
 
 class RequestsView(ListView):
     """
-        The requests page view for my application
+    The requests page view for my application
     """
     template_name = 'personal_info/requests.html'
     context_object_name = 'requests'
@@ -160,7 +160,7 @@ class AjaxFormMixin(object):
         """
         Method to call when a valid form is posted
         :param form: the form that is being submitted
-        :return:
+        :return: http or json response
         """
         response = super(AjaxFormMixin, self).form_valid(form)
         LOGGER_DEBUG.debug(form.data)
@@ -173,6 +173,11 @@ class AjaxFormMixin(object):
             return response
 
     def form_invalid(self, form):
+        """
+        Method to call when an invalid form is posted
+        :param form: the form that is being submitted
+        :return: http or json response
+        """
         LOGGER_DEBUG.debug(form.errors)
         response = super(AjaxFormMixin, self).form_invalid(form)
         if self.request.is_ajax():
@@ -186,7 +191,7 @@ class AjaxFormMixin(object):
 
 class PersonUpdateView(LoginRequiredMixin, AjaxFormMixin, UpdateView):
     """
-        The update page view for my application
+    The update page view for my application
     """
     model = Person
     template_name = 'personal_info/edit.html'
@@ -218,6 +223,13 @@ class PersonUpdateView(LoginRequiredMixin, AjaxFormMixin, UpdateView):
         return Person.objects.first()
 
     def post(self, request, *args, **kwargs):
+        """
+        This method catches the cancel_button on a posted form
+        :param request: the request that comes in
+        :param args: arguments
+        :param kwargs: keyword arguments
+        :return: redirect or base class post()
+        """
         if request.POST.get('cancel_button'):
             if request.is_ajax():
                 return HttpResponse(
@@ -233,4 +245,4 @@ class PersonUpdateView(LoginRequiredMixin, AjaxFormMixin, UpdateView):
                 '%s?status_message=Editing canceled' %
                 reverse('home')
             )
-        return super(AjaxFormMixin, self).post(request, *args, **kwargs)
+        return super(PersonUpdateView, self).post(request, *args, **kwargs)
