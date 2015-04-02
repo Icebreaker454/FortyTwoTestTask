@@ -4,10 +4,75 @@
     The models file for ticket1
 """
 from PIL import Image
+import logging
 
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
+from django.db.models.signals import post_save
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+
+LOGGER_DEBUG = logging.getLogger('personal_info.debug')
+
+
+@receiver(post_save)
+def log_change_models_models(
+        sender,
+        **kwargs
+):
+    """
+    The model change (create or update) signal processor
+    :param sender: the model that sends the signal
+    :param kwargs: keyword arguments
+    :return: None
+    """
+    # Don't think it's a good idea to log changes from
+    # the model that is used for logging model changes.
+    # As with AJAX updating the requests page...
+    if sender is not ModelLog:
+        instance = kwargs['instance']
+        try:
+            model_id = instance.id
+        except AttributeError:
+            model_id = None
+        if kwargs['created']:
+            log = ModelLog(
+                action='CREATE',
+                model=sender.__name__,
+                model_id=model_id
+            )
+        else:
+            log = ModelLog(
+                action='UPDATE',
+                model=sender.__name__,
+                model_id=model_id
+            )
+        LOGGER_DEBUG.debug(log.__unicode__())
+        log.save()
+
+
+@receiver(pre_delete)
+def log_delete_models(sender, **kwargs):
+    """
+    The model delete signal processor
+    :param sender: the model that sends the signal
+    :param kwargs:
+    :return: None
+    """
+    if sender is not ModelLog:
+        instance = kwargs['instance']
+        try:
+            model_id = instance.id
+        except AttributeError:
+            model_id = None
+        log = ModelLog(
+            action='DELETE',
+            model=sender.__name__,
+            model_id=model_id
+        )
+        LOGGER_DEBUG.debug(log.__unicode__())
+        log.save()
 
 
 class Person(models.Model):
@@ -130,4 +195,30 @@ class ModelLog(models.Model):
     The model for the signal processor to store data
     about model creating, editing and deleting
     """
-    pass
+    ACTION_CHOICES = (
+        ('CREATE', 'Create'),
+        ('UPDATE', 'Update'),
+        ('DELETE', 'Delete')
+    )
+
+    date = models.DateTimeField(auto_now_add=True)
+    action = models.CharField(
+        max_length=6,
+        choices=ACTION_CHOICES
+    )
+    model = models.CharField(max_length=100)
+    model_id = models.SmallIntegerField(
+        null=True
+    )
+
+    def __unicode__(self):
+        """
+        The method to get the ModelLog string representation
+        :return: the ModelLog string representation
+        """
+        return "%s: %s %s %s" % (
+            self.date,
+            self.model,
+            self.model_id,
+            self.action
+        )

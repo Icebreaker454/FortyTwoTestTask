@@ -12,28 +12,45 @@ from apps.personal_info.models import Person
 class SignalsTestCase(TestCase):
     """
     This class is the test case for testing the personal_info
-    application signal_processors.
+    application signal_processors and their related parts.
     """
+
     def setUp(self):
         """ Initialize test data """
         self.person = Person(
-            'Paul',
-            'Pukach',
-            '25-06-1996',
-            'pavlopukach@gmail.com'
+            first_name='Paul',
+            last_name='Pukach',
+            birth_date='1996-06-25',
+            bio='Student of AM faculty',
+            contacts_email='pavlopukach@gmail.com'
+        )
+
+    def test_log_unicode(self):
+        """ Test the ModelLog string representation """
+        from datetime import datetime
+        log = ModelLog(datetime.now(), 'UPDATE', 'Person', 1)
+        self.assertEqual(
+            log.__unicode__(),
+            "%s: %s %s %s" % (
+                log.date,
+                log.model,
+                log.model_id,
+                log.action
+            )
         )
 
     def test_model_creation(self):
         """ Test whether the model creating log is stored """
         record_count = ModelLog.objects.count()
-        WebRequest.objects.create()
+        WebRequest.objects.create(remote_address='test')
         self.assertEqual(record_count + 1, ModelLog.objects.count())
         last_record = ModelLog.objects.last()
         self.assertEqual(last_record.action, 'CREATE')
         self.assertEqual(last_record.model, 'WebRequest')
         self.assertEqual(last_record.model_id, WebRequest.objects.last().id)
 
-        Person.objects.create()
+        self.person.save()
+
         self.assertEqual(record_count + 2, ModelLog.objects.count())
         last_record = ModelLog.objects.last()
         self.assertEqual(last_record.action, 'CREATE')
