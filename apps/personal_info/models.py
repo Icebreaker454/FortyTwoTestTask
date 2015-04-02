@@ -123,3 +123,11 @@ class WebRequest(models.Model):
         :return: WebRequest string representation
         """
         return "%s%s" % (self.remote_address, self.path)
+
+
+class ModelLog(models.Model):
+    """
+    The model for the signal processor to store data
+    about model creating, editing and deleting
+    """
+    pass
