@@ -53,15 +53,6 @@ class RequestsPageTest(TestCase):
         response = self.client.get(reverse('requests'))
         self.assertEqual(response.context['requests'][0].pk, second.pk)
 
-    def test_request_negative_priority(self):
-        """
-        Test whether invalid data is omitted
-        """
-        request = WebRequest.objects.create(remote_address='test')
-        request.priority = -1
-        request.save()
-        self.assertEqual(request.priority, 0)
-
     def test_request_model_unicode(self):
         """ Test the request model string representation"""
         request = WebRequest.objects.create(

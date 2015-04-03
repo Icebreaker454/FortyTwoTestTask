@@ -187,7 +187,7 @@ class WebRequest(models.Model):
     post = models.TextField()
     remote_address = models.IPAddressField()
     method = models.CharField(max_length=7)
-    priority = models.SmallIntegerField(default=0)
+    priority = models.PositiveIntegerField(default=0)
 
     def get_admin_url(self):
         """

@@ -3,13 +3,15 @@ function AsyncRequestUpdate() {
     var count = parseInt($('#request-table').data('count'));
     var unread = 0;
     var url;
-    if ($(location.search.substr('reverse'))){
+
+
+    setInterval(function() {
+            if ($(location.search.substr('reverse'))){
         url = "/requests/";
     }
     else {
         url = ("/requests/?reverse=1");
     }
-    setInterval(function() {
         var table = $('#request-table');
         $.get(
             url,
@@ -29,7 +31,32 @@ function AsyncRequestUpdate() {
             },
             'html'
         )
-    }, 1000)
+    }, 1000);
+        $('input[type="number"]').change(function () {
+            $.ajax(
+                '/requests/',
+                {
+                    dataType: 'json',
+                    async: true,
+                    type: 'POST',
+                    data: {
+                        'pk': $(this).data('request-id'),
+                        'priority': $(this).val(),
+                        'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+                    },
+                    beforeSend: function () {
+
+                    },
+                    success: function (data, status) {
+                        alert(status);
+                    },
+                    error: function (status, error) {
+                        alert(error);
+                    }
+                }
+            );
+        });
+    }
 }
 
 

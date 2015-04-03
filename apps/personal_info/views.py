@@ -121,6 +121,31 @@ class RequestsView(ListView):
     template_name = 'personal_info/requests.html'
     context_object_name = 'requests'
 
+    def post(self, request, *args, **kwargs):
+        """
+        Method that will track priority changes from
+        the requests page
+        :param request: the request that comes in
+        :param args: arguments
+        :param kwargs: keyword arguments
+        :return: Json response for the AJAX function
+        """
+        LOGGER_INFO.info('Processing requests page AJAX')
+        data = request.POST
+        obj = WebRequest.objects.get(pk=data['pk'])
+        LOGGER_DEBUG.debug('Changing priority of request id: %s', data['pk'])
+        setattr(obj, 'priority', data['priority'])
+        obj.save()
+
+        return HttpResponse(
+            json.dumps(
+                {
+                    'status': 'success'
+                }
+            ),
+            content_type='application/json'
+        )
+
     def dispatch(self, request, *args, **kwargs):
         """
         Overridden method that logs the request

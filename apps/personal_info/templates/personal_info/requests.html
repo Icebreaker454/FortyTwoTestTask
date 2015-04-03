@@ -23,7 +23,9 @@
           <td width="20%">{{ object.get }}</td>
           <td width="10%">
             <input type="number"
-                    value="{{ object.priority }}"/>
+                    value="{{ object.priority }}"
+                    data-request-id="{{ object.id }}"
+                    min="0"/>
           </td>
         </tr>
       {% endfor %}
