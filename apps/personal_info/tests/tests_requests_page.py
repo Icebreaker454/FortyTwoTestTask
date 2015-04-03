@@ -31,13 +31,26 @@ class RequestsPageTest(TestCase):
         self.middleware.process_request(request)
         self.assertEqual(WebRequest.objects.count(), 1)
 
-    def test_time_ordering(self):
-        """ Test the requests ordering by time """
-        requests = WebRequest.objects.order_by('time')
+    def test_request_ordering(self):
+        """ Test the requests ordering by priority and time """
+        requests = WebRequest.objects.order_by('priority', 'time')[:10]
         response = self.client.get(reverse('requests'))
 
         for i, request in enumerate(requests):
             self.assertEqual((response.context['requests'])[i].pk, request.pk)
+
+    def test_request_adding_priority(self):
+        """
+        Test whether adding priority to the field makes
+        effect on the database
+        """
+        last_request = WebRequest.objects.last()
+        last_request.priority = True
+        last_request.save()
+
+        response = self.client.get(reverse('requests'))
+
+        self.assertEqual(response.context['requests'].first(), last_request)
 
     def test_request_model_unicode(self):
         """ Test the request model string representation"""
