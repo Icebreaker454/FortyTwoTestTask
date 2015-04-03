@@ -24,13 +24,18 @@
             <h1><a href="{% url 'home' %}">42 Coffee Cups <br/> Test Assignment</a></h1>
           {% endblock %}
       </div>
+
       <div class="col-xs-3">
-        {% if user.is_authenticated %}
-            <h5 class="top-user">Hello, <strong>{{ user.get_username }}</strong>(<a href="{% url 'logout' %}">Log out</a>)</h5>
-        {% else %}
-            <h5 class="top-user"><a href="{% url 'login' %}">Log in</a></h5>
-        {% endif %}
+        {% block side_links %}
+          {% if user.is_authenticated %}
+              <h5 class="top-user">Hello, <strong>{{ user.get_username }}</strong>(<a href="{% url 'logout' %}">Log out</a>)</h5>
+          {% else %}
+              <h5 class="top-user"><a href="{% url 'login' %}">Log in</a></h5>
+          {% endif %}
+        {% endblock %}
       </div>
+
+
     </div>
     {% block status_message %}
     {% endblock %}

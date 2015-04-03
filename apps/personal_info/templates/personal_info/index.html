@@ -11,10 +11,15 @@
 {% endif %}
 {% endblock %}
 
-{% block info %}
+{% block side_links %}
+  {{ block.super }}
   <div>
     {% edit_link person %}>
   </div>
+{% endblock %}
+
+{% block info %}
+
   <h2 id="personal-info"><a href="{% url 'update' %}">Personal information</a></h2>
   <h4>First name:</h4>
   <p>{{ person.first_name }}</p>
