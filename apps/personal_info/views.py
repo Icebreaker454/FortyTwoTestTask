@@ -137,7 +137,10 @@ class RequestsView(ListView):
         The method that gets the QuerySet for the ListView
         :return: QuerySet for the view
         """
-        queryset = WebRequest.objects.order_by('time')[:10]
+        queryset = WebRequest.objects.order_by('-priority', 'time')[:10]
+        if self.request.GET.get('reverse'):
+            queryset = queryset.reverse()
+        LOGGER_DEBUG.debug('Requests displayed:')
         for obj in queryset:
             LOGGER_DEBUG.debug(obj.__unicode__())
         return queryset
@@ -150,6 +153,10 @@ class RequestsView(ListView):
         """
         context = super(RequestsView, self).get_context_data(**kwargs)
         context['requests_count'] = WebRequest.objects.count()
+        if self.request.GET.get('reverse', ''):
+            context['reversed'] = 1
+        else:
+            context['reversed'] = 0
         return context
 
 

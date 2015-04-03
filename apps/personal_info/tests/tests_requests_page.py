@@ -44,19 +44,23 @@ class RequestsPageTest(TestCase):
         Test whether adding priority to the field makes
         effect on the database
         """
-        for _ in range(9):
-            if _ % 2 == 0:
-                url = reverse('home')
-            else:
-                url = reverse('update')
-            self.client.get(url)
-        last_request = WebRequest.objects.last()
-        last_request.priority = 1
-        last_request.save()
-
+        first = WebRequest.objects.create(remote_address='test1')
+        second = WebRequest.objects.create(remote_address='test2')
         response = self.client.get(reverse('requests'))
+        self.assertEqual(response.context['requests'][0].pk, first.pk)
+        second.priority = 1
+        second.save()
+        response = self.client.get(reverse('requests'))
+        self.assertEqual(response.context['requests'][0].pk, second.pk)
 
-        self.assertEqual(response.context['requests'].first().pk, last_request.pk)
+    def test_request_negative_priority(self):
+        """
+        Test whether invalid data is omitted
+        """
+        request = WebRequest.objects.create(remote_address='test')
+        request.priority = -1
+        request.save()
+        self.assertEqual(request.priority, 0)
 
     def test_request_model_unicode(self):
         """ Test the request model string representation"""
