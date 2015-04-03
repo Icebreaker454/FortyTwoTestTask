@@ -37,5 +37,6 @@ class Command(BaseCommand):
                         model.objects.count()
                     )
                 )
-        except utils.OperationalError:
-            pass
+        except utils.OperationalError as e:
+            self.stderr.write('Operational error: %s' %
+                              e.message)
