@@ -27,6 +27,10 @@
   width: 70px;
   text-align: center;
 }
+#edit-link {
+    text-align: right;
+    margin-bottom: 5px;
+}
 
 .spinner > div {
   width: 18px;

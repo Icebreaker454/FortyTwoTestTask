@@ -23,7 +23,7 @@ class Command(BaseCommand):
         :return: None
         """
         try:
-            model_list = models.get_models()
+            model_list = models.get_models(include_auto_created=True)
             for model in model_list:
                 self.stdout.write(
                     '%s - %s' % (
