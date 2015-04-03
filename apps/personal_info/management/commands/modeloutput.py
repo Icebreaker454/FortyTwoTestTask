@@ -4,6 +4,7 @@ personal_info application
 """
 from django.core.management.base import BaseCommand
 from django.db import models
+from django.db import utils
 
 
 class Command(BaseCommand):
@@ -21,17 +22,20 @@ class Command(BaseCommand):
         :param options: command options
         :return: None
         """
-        model_list = models.get_models()
-        for model in model_list:
-            self.stdout.write(
-                '%s - %s' % (
-                    model.__name__,
-                    model.objects.count()
+        try:
+            model_list = models.get_models()
+            for model in model_list:
+                self.stdout.write(
+                    '%s - %s' % (
+                        model.__name__,
+                        model.objects.count()
+                    )
                 )
-            )
-            self.stderr.write(
-                'error: %s - %s' % (
-                    model.__name__,
-                    model.objects.count()
+                self.stderr.write(
+                    'error: %s - %s' % (
+                        model.__name__,
+                        model.objects.count()
+                    )
                 )
-            )
+        except utils.OperationalError:
+            pass
