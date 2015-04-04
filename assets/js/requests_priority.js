@@ -2,7 +2,7 @@
  * Created by icebreaker on 04.04.15.
  */
 function initAjaxPriorityPosting() {
-    $('input[type="number"]').change(function () {
+    $(document).on('change', 'input', function () {
         $.ajax(
             '/requests/edit_priority/',
             {
