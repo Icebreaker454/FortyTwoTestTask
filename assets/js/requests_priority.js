@@ -21,8 +21,9 @@ function initAjaxPriorityPosting() {
                     $('.spinner').hide();
                 },
                 error: function (status, error) {
-                    $('#loading-row').css("background-color", "red");
-                    $('#loading-row').html('<h4>Internal server error, please, try again later</h4>');
+                    var row = $('#loading-row');
+                    row.css("background-color", "red");
+                    row.html('<h4>Internal server error, please, try again later</h4>');
                 }
             }
         );
