@@ -8,22 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.delete_table(u'personal_info_modellog')
-        # Adding model 'ModelLog'
-        db.create_table(u'personal_info_modellog', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('action', self.gf('django.db.models.fields.CharField')(max_length=6)),
-            ('model', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('model_id', self.gf('django.db.models.fields.SmallIntegerField')(null=True)),
-        ))
-        db.send_create_signal(u'personal_info', ['ModelLog'])
 
+        # Changing field 'WebRequest.priority'
+        db.alter_column(u'personal_info_webrequest', 'priority', self.gf('django.db.models.fields.PositiveIntegerField')())
 
     def backwards(self, orm):
-        # Deleting model 'ModelLog'
-        db.delete_table(u'personal_info_modellog')
 
+        # Changing field 'WebRequest.priority'
+        db.alter_column(u'personal_info_webrequest', 'priority', self.gf('django.db.models.fields.SmallIntegerField')())
 
     models = {
         u'personal_info.modellog': {
@@ -54,6 +46,7 @@ class Migration(SchemaMigration):
             'method': ('django.db.models.fields.CharField', [], {'max_length': '7'}),
             'path': ('django.db.models.fields.TextField', [], {}),
             'post': ('django.db.models.fields.TextField', [], {}),
+            'priority': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'remote_address': ('django.db.models.fields.IPAddressField', [], {'max_length': '15'}),
             'time': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'})
         }

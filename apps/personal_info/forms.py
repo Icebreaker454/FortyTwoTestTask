@@ -80,9 +80,11 @@ class PersonUpdateForm(ModelForm):
                               <div class="alert \
                                         alert-success" id="alert">\
                                 <div class="spinner" style="display: none">\
-                                  <div class="bounce1"></div>\
-                                  <div class="bounce2"></div>\
-                                  <div class="bounce3"></div>\
+                                  <div class="rect1"></div>\
+                                  <div class="rect2"></div>\
+                                  <div class="rect3"></div>\
+                                  <div class="rect4"></div>\
+                                  <div class="rect5"></div>\
                                 </div>\
                               </div>\
                             </div>'

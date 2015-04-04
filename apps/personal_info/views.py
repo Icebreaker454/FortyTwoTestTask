@@ -22,6 +22,7 @@ from apps.personal_info.forms import PersonUpdateForm
 from apps.personal_info.forms import LogInForm
 from apps.personal_info.models import Person
 from apps.personal_info.models import WebRequest
+from apps.personal_info.utils import paginate
 
 LOGGER_INFO = logging.getLogger('personal_info.info')
 LOGGER_DEBUG = logging.getLogger('personal_info.debug')
@@ -75,7 +76,7 @@ class LogInView(FormView):
         This method gets the FormView success url
         :return: the FormView success url
         """
-        return reverse('update')
+        return reverse('home')
 
 
 class IndexView(TemplateView):
@@ -114,6 +115,59 @@ class IndexView(TemplateView):
         return context
 
 
+class RequestsPriorityView(LoginRequiredMixin, TemplateView):
+    """
+    The requests page edit priority page for my
+    application
+    """
+    template_name = 'personal_info/edit_request_priority.html'
+
+    def post(self, request, *args, **kwargs):
+        """
+        Method that will track priority changes from
+        the requests page
+        :param request: the request that comes in
+        :param args: arguments
+        :param kwargs: keyword arguments
+        :return: Json response for the AJAX function
+        """
+        LOGGER_INFO.info('Processing requests page AJAX')
+        data = request.POST
+        obj = WebRequest.objects.get(pk=data['pk'])
+        LOGGER_DEBUG.debug('Changing priority of request id: %s', data['pk'])
+        if int(data['priority']) < 0:
+            setattr(obj, 'priority', 0)
+        else:
+            setattr(obj, 'priority', data['priority'])
+        obj.save()
+
+        return HttpResponse(
+            json.dumps(
+                {
+                    'status': 'success'
+                }
+            ),
+            content_type='application/json'
+        )
+
+    def get_context_data(self, **kwargs):
+        """
+        This method gets the context data for the requests page
+        :param kwargs: keyword arguments
+        :return : template context object
+        """
+        context = super(RequestsPriorityView, self).get_context_data(**kwargs)
+        requests = WebRequest.objects.order_by('-priority')
+        context = paginate(
+            requests,
+            10,
+            self.request,
+            context,
+            'requests'
+        )
+        return context
+
+
 class RequestsView(ListView):
     """
     The requests page view for my application
@@ -137,7 +191,10 @@ class RequestsView(ListView):
         The method that gets the QuerySet for the ListView
         :return: QuerySet for the view
         """
-        queryset = WebRequest.objects.order_by('time')[:10]
+        queryset = WebRequest.objects.order_by('-priority', 'time')[:10]
+        if self.request.GET.get('reverse'):
+            queryset = queryset.reverse()
+        LOGGER_DEBUG.debug('Requests displayed:')
         for obj in queryset:
             LOGGER_DEBUG.debug(obj.__unicode__())
         return queryset
@@ -150,6 +207,10 @@ class RequestsView(ListView):
         """
         context = super(RequestsView, self).get_context_data(**kwargs)
         context['requests_count'] = WebRequest.objects.count()
+        if self.request.GET.get('reverse', ''):
+            context['reversed'] = 1
+        else:
+            context['reversed'] = 0
         return context
 
 
