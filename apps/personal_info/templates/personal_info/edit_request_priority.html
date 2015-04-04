@@ -14,7 +14,7 @@
         <h4>Data will be saved right after changing fields</h4>
       </div>
       <div class="col-xs-7">
-         <div class="spinner" style="display: none">
+         <div class="spinner" id="loading-indicator" style="display: none">
               <div class="rect1"></div>
               <div class="rect2"></div>
               <div class="rect3"></div>
@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block content %}
-  <table class="table table-striped" id="request-table" data-count="{{ requests_count }}">
+  <table class="table table-striped" id="request-table" data-pages="{{ page_obj.paginator.num_pages }}">
     <thead>
       <tr>
         <th width="20%">Time:</th>
@@ -56,6 +56,16 @@
       {% endfor %}
     </tbody>
   </table>
+  <div class="alert alert-warning" id="load-more-button">
+    <h4 style="text-align: center">Load more</h4>
+    <div class="spinner" id="load-more" style="display: none">
+              <div class="rect1"></div>
+              <div class="rect2"></div>
+              <div class="rect3"></div>
+              <div class="rect4"></div>
+              <div class="rect5"></div>
+    </div>
+  </div>
 {% endblock %}
 {% block js %}
   <script src="{% static 'js/requests_priority.js' %}"></script>

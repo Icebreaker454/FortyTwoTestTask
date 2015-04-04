@@ -135,7 +135,10 @@ class RequestsPriorityView(LoginRequiredMixin, TemplateView):
         data = request.POST
         obj = WebRequest.objects.get(pk=data['pk'])
         LOGGER_DEBUG.debug('Changing priority of request id: %s', data['pk'])
-        setattr(obj, 'priority', data['priority'])
+        if int(data['priority']) < 0:
+            setattr(obj, 'priority', 0)
+        else:
+            setattr(obj, 'priority', data['priority'])
         obj.save()
 
         return HttpResponse(
