@@ -1,32 +1,38 @@
 {% extends 'personal_info/_l_request_page.html' %}
+{% load custom_tags %}
+{% block side_links %}
+  {{ block.super }}
+  <div id="request-priority">
+    <a href="{% url 'requests_edit' %}">
+      Edit priority
+    </a>
+  </div>
+{% endblock %}
 {% load staticfiles %}
 {% block content %}
-  <table class="table table-striped" id="request-table">
+  <table class="table table-striped" id="request-table" data-count="{{ requests_count }}">
     <thead>
       <tr>
-        <th width="20%">Time:</th>
-        <th width="20%">Path:</th>
+        <th width="15%">Admin Edit</th>
+        <th width="10%">Time:</th>
+        <th width="10%">Path:</th>
         <th width="10%">Method</th>
         <th width="20%">POST</th>
         <th width="20%">GET</th>
-        <th width="10%"><a href="{% url 'requests' %}{% if not reversed %}?reverse=1{% endif %}">Priority</a></th>
+        <th width="5%"><a href="{% url 'requests' %}{% if not reversed %}?reverse=1{% endif %}">Priority</a></th>
       </tr>
     </thead>
-    <tbody data-count="{{ requests_count }}">
+    <tbody>
     {% csrf_token %}
       {% for object in requests %}
         <tr>
-          <td width="20%">{{ object.time|date:'Y-m-d H:i:s'}}</td>
-          <td width="20%">{{ object.remote_address }}{{ object.path }}</td>
+          <td width="15%">{% edit_link object %}<td>
+          <td width="10%">{{ object.time|date:'Y-m-d H:i:s'}}</td>
+          <td width="10%">{{ object.remote_address }}{{ object.path }}</td>
           <td width="10%">{{ object.method }}</td>
           <td width="20%">{{ object.post }}</td>
           <td width="20%">{{ object.get }}</td>
-          <td width="10%">
-            <input type="number"
-                    value="{{ object.priority }}"
-                    data-request-id="{{ object.id }}"
-                    min="0"/>
-          </td>
+          <td width="5%">{{ object.priority }}</td>
         </tr>
       {% endfor %}
     </tbody>

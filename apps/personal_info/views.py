@@ -22,6 +22,7 @@ from apps.personal_info.forms import PersonUpdateForm
 from apps.personal_info.forms import LogInForm
 from apps.personal_info.models import Person
 from apps.personal_info.models import WebRequest
+from apps.personal_info.utils import paginate
 
 LOGGER_INFO = logging.getLogger('personal_info.info')
 LOGGER_DEBUG = logging.getLogger('personal_info.debug')
@@ -75,7 +76,7 @@ class LogInView(FormView):
         This method gets the FormView success url
         :return: the FormView success url
         """
-        return reverse('update')
+        return reverse('home')
 
 
 class IndexView(TemplateView):
@@ -114,12 +115,12 @@ class IndexView(TemplateView):
         return context
 
 
-class RequestsView(ListView):
+class RequestsPriorityView(LoginRequiredMixin, TemplateView):
     """
-    The requests page view for my application
+    The requests page edit priority page for my
+    application
     """
-    template_name = 'personal_info/requests.html'
-    context_object_name = 'requests'
+    template_name = 'personal_info/edit_request_priority.html'
 
     def post(self, request, *args, **kwargs):
         """
@@ -145,6 +146,31 @@ class RequestsView(ListView):
             ),
             content_type='application/json'
         )
+
+    def get_context_data(self, **kwargs):
+        """
+        This method gets the context data for the requests page
+        :param kwargs: keyword arguments
+        :return : template context object
+        """
+        context = super(RequestsPriorityView, self).get_context_data(**kwargs)
+        requests = WebRequest.objects.order_by('-priority')
+        context = paginate(
+            requests,
+            10,
+            self.request,
+            context,
+            'requests'
+        )
+        return context
+
+
+class RequestsView(ListView):
+    """
+    The requests page view for my application
+    """
+    template_name = 'personal_info/requests.html'
+    context_object_name = 'requests'
 
     def dispatch(self, request, *args, **kwargs):
         """
